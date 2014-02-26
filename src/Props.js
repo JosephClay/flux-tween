@@ -1,3 +1,4 @@
+// TODO: IE prefixes
 var Props = (function() {
 	
 	var _FAKE_EL = document.createElement('fakeelement');
@@ -26,27 +27,69 @@ var Props = (function() {
 
 	return {
 		animationEvent: _keyValTest({
+			'-webkit-animation': 'webkitAnimationEnd',
 			'animation': 'animationend',
-			'-o-animation': 'oAnimationEnd',
 			'-moz-animation': 'animationend',
-			'-webkit-animation': 'webkitAnimationEnd'
+			'-o-animation': 'oAnimationEnd'
 		}),
 
-		transformProperty: _propTest([
-			'MozTransform',
-			'OTransform',
+		transform: _propTest([
+			'mozTransform',
+			'oTransform',
 			'msTransform',
 			'transform',
-			'WebkitTransform'
+			'webkitTransform'
 		]),
 
-		transformOriginProperty: _propTest([
-			'MozTransformOrigin',
-			'OTransformOrigin',
+		transformOrigin: _propTest([
+			'mozTransformOrigin',
+			'oTransformOrigin',
 			'msTransformOrigin',
 			'transformOrigin',
-			'WebkitTransformOrigin'
-		])
+			'webkitTransformOrigin'
+		]),
+
+		animationDuration: _keyValTest({
+			'-webkit-animation-duration': 'webkitAnimationDuration',
+			'animation-duration': 'animationDuration',
+			'-moz-animation-duration': 'mozAnimationDuration',
+			'-o-animation-duration': 'oAnimationDuration'
+		}),
+
+		animationName: _keyValTest({
+			'-webkit-animation-name': 'webkitAnimationName',
+			'animation-name': 'animationName',
+			'-moz-animation-name': 'mozAnimationName',
+			'-o-animation-name': 'oAnimationName'
+		}),
+
+		animationKeyFrame: _keyValTest({
+			'-webkit-keyframes': 'webkitAnimationName',
+			'keyframes': 'animationName',
+			'-moz-keyframes': 'mozAnimationName',
+			'-o-keyframes': 'oAnimationName'
+		}),
+
+		animationTimingFunction: _keyValTest({
+			'-webkit-animation-timing-function': 'webkitAnimationTimingFunction',
+			'animation-timing-function': 'animationTimingFunction',
+			'-moz-animation-timing-function': 'mozAnimationTimingFunction',
+			'-o-animation-timing-function': 'oAnimationTimingFunction'
+		}),
+
+		animationFillMode: _keyValTest({
+			'-webkit-animation-fill-mode': 'webkitAnimationFillMode',
+			'animation-fill-mode': 'animationFillMode',
+			'-moz-animation-fill-mode': 'mozAnimationFillMode',
+			'-o-animation-fill-mode': 'oAnimationFillMode'
+		}),
+
+		backfaceVisibility: _keyValTest({
+			'-webkit-backface-visibility': 'webkitBackfaceVisibility',
+			'backface-visibility': 'backfaceVisibility',
+			'-moz-backface-visibility': 'mozBackfaceVisibility',
+			'-o-backface-visibility': 'oBackfaceVisibility'
+		})
 	};
 
 }());

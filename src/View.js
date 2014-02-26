@@ -22,7 +22,7 @@ var View = (function(_utils, _props, EventEmitter) {
 		this.style = this.elem.style;
 		this.properties = props;
 
-		this._matrix = new Matrix(new _utils.WebMatrix(this.elem.style[_props.transformProperty]));
+		this._matrix = new Matrix(new _utils.WebMatrix(this.elem.style[_props.transform]));
 		this._bindEnd();
 	};
 
@@ -50,11 +50,11 @@ var View = (function(_utils, _props, EventEmitter) {
 
 		setMatrix: function(matrix) {
 			this._matrix = matrix;
-			this.style[_props.transformProperty] = this._matrix.css();
+			this.style[_props.transform] = this._matrix.css();
 		},
 		
 		getComputedMatrix: function() {
-			return new _utils.WebMatrix(this.getComputedStyle()[_props.transformProperty]);
+			return new _utils.WebMatrix(this.getComputedStyle()[_props.transform]);
 		},
 
 		getComputedStyle: function() {

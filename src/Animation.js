@@ -53,7 +53,7 @@ var Animation = (function(_utils, _props, _css, EventEmitter, SpringCurve, Bezie
 		this._normalizeShortHand(this._from);
 		this._normalizeShortHand(this._to);
 
-		if (this.origin) { this.view.style[_props.transformOriginProperty] = this.origin; }
+		if (this.origin) { this.view.style[_props.transformOrigin] = this.origin; }
 	};
 
 	_.extend(Animation.prototype, EventEmitter.prototype, {
