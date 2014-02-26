@@ -13,29 +13,30 @@
 				opacity: 0;
 				background: #000;
 			}
-
 		</style>
 	</head>
 	<body>
 		
 		<div id="Box" class="box"></div>
 
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+		<script src="libs/underscore.js"></script>
+		<script src="libs/XCSSMatrix.js"></script>
 
-		<script src="src/Config.js"></script>
-		<script src="src/Filters.js"></script>
 		<script src="src/Utils.js"></script>
+		<script src="src/Props.js"></script>
 		<script src="src/Css.js"></script>
 		<script src="src/EventEmitter.js"></script>
 		<script src="src/Matrix.js"></script>
 		<script src="src/SpringCurve.js"></script>
 		<script src="src/View.js"></script>
+		<script src="src/Bezier.js"></script>
 		<script src="src/Animation.js"></script>
-		<script src="src/Animation2.js"></script>
 		<script>
 
 			// Create the logo view
 			var view = new View(document.getElementById('Box'), {
+				// TODO: Reader for these properties so
+				// they don't have to be set manually
 				x: 100,
 				y: 100,
 				width: 251,
@@ -46,20 +47,27 @@
 				rotationX: 0
 			});
 
-			var TRIGGER = function() {
-				view.animate({
-					properties: {
-						scale: 1.8,
-						x: 300,
-						y: 300,
-						opacity: 1,
-						rotationX: 180
-					},
-					curve: 'spring(1000,15,1000)' // TODO: don't do string parsing dumb stuff
-				});
-			};
+			var foo = view.animate({
+				properties: {
+					scale: 1.8,
+					x: 300,
+					y: 300,
+					opacity: 1,
+					rotationX: 180
+				},
+				spring: [80, 15, 1000]
+			});
 
-			TRIGGER();
+			setTimeout(function() {
+				// Reverse
+				foo.reverse();
+
+				// Restart
+				setTimeout(function() {
+					foo.start();
+				}, 2 * 1000);
+
+			}, 2 * 1000);
 
 		</script>
 	</body>

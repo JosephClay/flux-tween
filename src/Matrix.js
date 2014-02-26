@@ -1,7 +1,7 @@
-var Matrix = (function(utils) {
+var Matrix = (function(_utils) {
 
 	var _PI = Math.PI,
-		_emptyMatrix = new WebKitCSSMatrix(),
+		_emptyMatrix = new _utils.WebMatrix(),
 		_decompose = function(m) {
 			var result = {};
 			result.translation = {
@@ -23,7 +23,7 @@ var Matrix = (function(utils) {
 		};
 
 	var Matrix = function(matrix) {
-		if (matrix instanceof WebKitCSSMatrix) { this.from(matrix); }
+		if (matrix instanceof _utils.WebMatrix) { this.from(matrix); }
 	};
 
 	Matrix.prototype = {
@@ -52,7 +52,10 @@ var Matrix = (function(utils) {
 			return matrix.toString();
 		}
 	};
-
+	
+	Matrix.define = function(prop, desc) {
+		Object.defineProperty(Matrix.prototype, prop, desc);
+	};
 
 	Matrix.define('x', {
 		get: function() {

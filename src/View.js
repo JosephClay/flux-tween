@@ -1,7 +1,6 @@
-var View = (function() {
+var View = (function(_utils, _props, EventEmitter) {
 
-	var _id = 0,
-		_addClass = function(elem, className) {
+	var _addClass = function(elem, className) {
 			if (elem.classList) {
 				return elem.classList.add(className);
 			}
@@ -14,62 +13,23 @@ var View = (function() {
 			}
 
 			elem.className = elem.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
-		},
-		
-		_FAKE_EL = document.createElement('fakeelement'),
-		_animationEvent = (function() {
-			var _animationEndEventNames = {
-					'animation': 'animationend',
-					'-o-animation': 'oAnimationEnd',
-					'-moz-animation': 'animationend',
-					'-webkit-animation': 'webkitAnimationEnd'
-				},
-				eventName;
-
-			for (eventName in _animationEndEventNames) {
-				if (_FAKE_EL.style[eventName] !== undefined) {
-					return _animationEndEventNames[eventName];
-				}
-			}
-
-			return '';
-		}()),
-		_transformProperty = (function() {
-			var transforms = [
-					'MozTransform',
-					'OTransform',
-					'msTransform',
-					'transform',
-					'WebkitTransform'
-				],
-				idx = transforms.length;
-
-			while (idx--) {
-				if (_FAKE_EL.style[transforms[idx]] !== undefined) {
-					return transforms[idx];
-				}
-			}
-
-			return '';
-		}());
+		};
 
 	var Element = function(elem, props) {
 		EventEmitter.call(this);
 
-		this.id = (_id += 1);
 		this.elem = elem;
 		this.style = this.elem.style;
 		this.properties = props;
 
-		this._matrix = new Matrix(new WebKitCSSMatrix(this.elem.style[_transformProperty]));
+		this._matrix = new Matrix(new _utils.WebMatrix(this.elem.style[_props.transformProperty]));
 		this._bindEnd();
 	};
 
 	_.extend(Element.prototype, EventEmitter.prototype, {
 		_bindEnd: function() {
 			var self = this;
-			console.log(_animationEvent);
-			this.elem.addEventListener(_animationEvent, function() {
+			this.elem.addEventListener(_props.animationEvent, function() {
 				self.emit('end');
 			}, false);
 		},
@@ -88,22 +48,13 @@ var View = (function() {
 			return animation;
 		},
 
-		filterCss: function(filterValues) {
-			var css = [],
-				key, value;
-			
-			for (key in filterValues) {
-				value = filterValues[k];
-				if (FilterProperties.hasOwnProperty(key)) {
-					css.push(FilterProperties[key].css + '(' + value + FilterProperties[key].unit + ')');
-				}
-			}
-
-			return css.join(' ');
+		setMatrix: function(matrix) {
+			this._matrix = matrix;
+			this.style[_props.transformProperty] = this._matrix.css();
 		},
 		
 		getComputedMatrix: function() {
-			return new WebKitCSSMatrix(this.getComputedStyle()[_transformProperty]);
+			return new _utils.WebMatrix(this.getComputedStyle()[_props.transformProperty]);
 		},
 
 		getComputedStyle: function() {
@@ -113,4 +64,4 @@ var View = (function() {
 
 	return Element;
 
-}());
+}(Utils, Props, EventEmitter));

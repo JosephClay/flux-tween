@@ -1,26 +1,18 @@
 // TODO: non -webkit css
-var Animation = (function(utils, css, FilterProperties, EventEmitter, SpringCurve, Matrix, undefined) {
+var Animation = (function(_utils, _props, _css, EventEmitter, SpringCurve, Bezier, Matrix, undefined) {
 	
-	var config = {
+	var _defaults = {
 			timeSpeedFactor: 1,
 			roundingDecimals: 5,
 			fps: 60
 		},
+		_PREFIX = 'animationjs-animation-',
 		_id = 0,
 		_exists = function(obj) {
 			return (obj !== null && obj !== undefined);
 		};
 
-	var _animatableFilterProperties = (function() {
-			var obj = {},
-				key;
-			for (key in FilterProperties) {
-				obj[key] = FilterProperties[key].unit;
-			}
-			return obj;
-		}()),
-
-		_animatableMatrixProperties = [
+	var _animatableMatrixProperties = [
 			'x',
 			'y',
 			'z',
@@ -31,143 +23,114 @@ var Animation = (function(utils, css, FilterProperties, EventEmitter, SpringCurv
 			'rotationY',
 			'rotationZ'
 		],
-
-		_animationProperties = [
-			'properties',
-			'curve',
-			'time',
-			'origin',
-			'tolerance',
-			'precision',
-			'modifiers',
-			'limits',
-			'callback'
-		],
-
 		_animatableCssProperties = {
 			opacity: '',
 			width: 'px',
 			height: 'px'
 		};
 
-	var Animation = function(view, args) {
+	var Animation = function(view, options) {
 		EventEmitter.call(this);
 
-		var idx = _animationProperties.length,
-			prop;
-		while (idx--) {
-			prop = _animationProperties[idx];
-			this[prop] = args[prop];
-		}
-
 		this.view = view;
-		this.count = 0;
-		this.viewProperties = {};
-		this.ourProperties = {};
-
-		if (!_exists(this.time)) { this.time = 1000; }
-		if (!_exists(this.curve)) { this.curve = 'linear'; }
-		if (!_exists(this.precision)) { this.precision = config.fps; }
-
-		this._animationId = (_id += 1);
-
+		this.callback = options.callback;
+		this.precision = options.precision || _defaults.fps;
+		this.origin = options.origin;
+		this.time = options.time || 1000;
+		this.curve = options.curve || 'linear';
+		
+		this._to = options.properties;
+		this._from = view.properties;
+		this._id = (_id += 1);
 		this._cleanup = this._cleanup.bind(this);
+		this._animationName = _PREFIX + this._id;
+		this._currentProperties = {};
+		this._spring = options.spring;
+		this._ease = options.ease;
+		this._curveValues = this._parseCurve(options);
+		this._totalTime = (this._curveValues.length / this.precision) * 1000;
+
+		this._normalizeShortHand(this._from);
+		this._normalizeShortHand(this._to);
+
+		if (this.origin) { this.view.style[_props.transformOriginProperty] = this.origin; }
 	};
 
 	_.extend(Animation.prototype, EventEmitter.prototype, {
 
-		start: function(callback) {
-			var self = this;
-			
-			if (!this.view) { return console.error('Animation does not have a view to animate'); }
-
-			var startTime = utils.now();
-			this.count++;
-			this.animationName = 'framer-animation-' + this._animationId + '-' + this.count;
-
-			this.curveValues = this._parseCurve(this.curve);
-			this.totalTime = (this.curveValues.length / this.precision) * 1000;
-			
-			var viewProperties = this.view.properties,
-				properties = this.properties;
-			if (properties.scale) {
-				properties.scaleX = properties.scale;
-				properties.scaleY = properties.scale;
+		_normalizeShortHand: function(obj) {
+			if (obj.scale) {
+				obj.scaleX = obj.scale;
+				obj.scaleY = obj.scale;
 			}
-			if (properties.rotation) {
-				properties.rotationZ = properties.rotation;
+			if (obj.rotation) {
+				obj.rotationZ = to.rotation;
 			}
+		},
 
-			var idx = _animatableMatrixProperties.length,
+		start: function() {
+			
+			// Aggregate the properties we're animating to ----
+			var to = this._to,
+				idx = _animatableMatrixProperties.length,
 				key;
 			while (idx--) {
 				key = _animatableMatrixProperties[idx];
-				if (!properties[key]) { continue; }
-				this.viewProperties[key] = viewProperties[key];
-				
-				this.ourProperties[key] = properties[key];
+				if (!_exists(to[key])) { continue; } // If we're not going to it, skip
+				this._currentProperties[key] = to[key];
 			}
-			
 			for (key in _animatableCssProperties) {
-				if (!properties[key]) { continue; }
-				this.viewProperties[key] = viewProperties[key];
-				
-				this.ourProperties[key] = properties[key];
-			}
-
-			for (key in _animatableFilterProperties) {
-				if (!properties[key]) { continue; }
-				this.viewProperties[key] = viewProperties[key];
-				
-				this.ourProperties[key] = properties[key];
+				if (!_exists(to[key])) { continue; } // If we're not going to it, skip
+				this._currentProperties[key] = to[key];
 			}
 			
-			var animatedProperties = [];
-
-			for (key in this.viewProperties) {
-				if (this.viewProperties[key] !== this.ourProperties[key]) {
-					animatedProperties.push(key);
+			// Omit properties that aren't changing ----
+			var propertyCount = 0;
+			for (key in this._currentProperties) {
+				// No change, we don't care about it
+				if (this._from[key] === this._currentProperties[key]) {
+					delete this._currentProperties[key];
+					continue;
 				}
+
+				propertyCount += 1;
 			}
 
-			// Nothing to animate
-			if (animatedProperties.length === 0) { return; }
+			// Stop if there's nothing to animate ----
+			if (propertyCount === 0) { return; } // Nothing to animate
 			
+			// TODO: Keep this value so that we don't have to recalcuate the
+			// animtion if start get called again
 			this.keyFrameAnimationCSS = this._generateKeyframeCss();
 
-			if (this.origin) { this.view.style['-webkit-transform-origin'] = this.origin; }
-			
 			// TODO: Optimize
-			this.styleTag = css.addStyle([
-				this.keyFrameAnimationCSS, ' .', this.animationName, ' { ',
-					'-webkit-animation-duration: ' + (this.totalTime / 1000) + 's;',
-					'-webkit-animation-name: ' + this.animationName + ';',
+			this.styleTag = _css.addStyle([
+				this.keyFrameAnimationCSS, ' .', this._animationName, ' { ',
+					'-webkit-animation-duration: ' + (this._totalTime / 1000) + 's;',
+					'-webkit-animation-name: ' + this._animationName + ';',
 					'-webkit-animation-timing-function: linear;',
 					'-webkit-animation-fill-mode: both;',
 					'-webkit-backface-visibility: visible;',
 				'}'
 			].join(''));
 
-			this.view.addClass(this.animationName);
+			this.view.addClass(this._animationName);
 			this.view.on('end', this._cleanup);
 		},
 
 		reverse: function() {
-			var options = {},
-				idx = _animationProperties.length,
-				prop;
-			while (idx--) {
-				prop = _animationProperties[idx];
-				options[prop] = this[prop];
-			}
-			
-			options.properties = {};
-			var originalProperties = this._originalProperties,
-				key;
-			for (key in originalProperties) {
-				options.properties[key] = originalProperties[key];
-			}
-			return new Animation(options);
+			var animation = new Animation(this.view, {
+				properties: this._from,
+				callback: this.callback,
+				precision: this.precision,
+				origin: this.origin,
+				time: this.time,
+				curve: this.curve,
+				spring: this._spring,
+				ease: this._ease
+			});
+			animation.start();
+			return animation;
 		},
 
 		stop: function() {
@@ -177,72 +140,23 @@ var Animation = (function(utils, css, FilterProperties, EventEmitter, SpringCurv
 		_cleanup: function(completed) {
 			this.view.off('end', this._cleanup);
 
-			console.log('this: ', this);
-
-			var endMatrix, endStyles = {}, key, value;
-			if (completed) {
-				endMatrix = utils.extend(new Matrix(), this.ourProperties);
-				for (key in _animatableCssProperties) {
-					value = _animatableCssProperties[key];
-					endStyles[key] = this.ourProperties[key] + value;
-				}
-
-				var cssFilterProperties = {},
-					properties = this.ourProperties;
-				for (key in properties) {
-					value = properties[key];
-					if (FilterProperties.hasOwnProperty(key)) {
-						cssFilterProperties[FilterProperties[key].css] = value;
-					}
-				}
-				endStyles.webkitFilter = this.view.filterCss(cssFilterProperties);
-
-			} else {
-
-				endMatrix = new Matrix(this.view.getComputedMatrix());
-
-				var computedStyles = this.view.getComputedStyle();
-				console.log('computedStyles: ', computedStyles);
-				for (key in _animatableCssProperties) {
-					endStyles[key] = computedStyles[key];
-				}
-				endStyles.webkitFilter = computedStyles.webkitFilter;
+			var computedStyles = this.view.getComputedStyle(),
+				endStyles = {},
+				key;
+			for (key in _animatableCssProperties) {
+				endStyles[key] = computedStyles[key];
 			}
 
-			console.log('endStyles: ', endStyles);
-
-			this.view._matrix = endMatrix;
-			this.view.removeClass(this.animationName);
+			this.view.setMatrix(new Matrix(this.view.getComputedMatrix()));
 			this.view.style = _.extend(this.view.style, endStyles);
+			
+			this.view.removeClass(this._animationName);
+			_css.removeStyle(this.styleTag);
+
+			this.view.properties = this._to;
 
 			if (_.isFunction(this.callback)) { this.callback(this); }
-			return this.emit("end");
-		},
-
-		_generateKeyframes: function() {
-			var stepIncrement = 0,
-				stepDelta = 100 / (this.curveValues.length - 1),
-				deltas = this._deltas(),
-				keyFrames = {},
-				curveValues = this.curveValues,
-				idx = 0, length = curveValues.length;
-
-			for (; idx < length; idx++) {
-				var curveValue = curveValues[idx],
-					position = utils.round(stepIncrement * stepDelta, config.roundingDecimals),
-					currentKeyFrame = {};
-
-				var propertyName;
-				for (propertyName in this.viewProperties) {
-					if (!_exists(this.viewProperties[propertyName])) { continue; }
-					currentKeyFrame[propertyName] = curveValue * deltas[propertyName] + this.viewProperties[propertyName];
-				}
-
-				keyFrames[position] = currentKeyFrame;
-				stepIncrement++;
-			}
-
-			return keyFrames;
+			return this.emit('end');
 		},
 
 		_generateKeyframeCss: function() {
@@ -250,21 +164,13 @@ var Animation = (function(utils, css, FilterProperties, EventEmitter, SpringCurv
 				arr = [], // TODO: Optimize
 				matrix = new Matrix();
 			
-			arr.push('@-webkit-keyframes ' + this.animationName + ' {\n');
+			arr.push('@-webkit-keyframes ' + this._animationName + ' {\n');
 
 			var position, values, propertyName, unit, idx;
 			for (position in keyFrames) {
 				values = keyFrames[position];
 
 				arr.push('\t' + position + '% {');
-				arr.push('-webkit-filter: ');
-				
-				for (propertyName in _animatableFilterProperties) {
-					unit = _animatableFilterProperties[propertyName];
-					arr.push('' + FilterProperties[propertyName].css + '(' + (utils.round(values[propertyName], config.roundingDecimals)) + unit + ') ');
-				}
-				
-				arr.push(';');
 				arr.push('-webkit-transform: ');
 
 				idx = _animatableMatrixProperties.length;
@@ -277,7 +183,8 @@ var Animation = (function(utils, css, FilterProperties, EventEmitter, SpringCurv
 
 				for (propertyName in _animatableCssProperties) {
 					unit = _animatableCssProperties[propertyName];
-					arr.push('' + propertyName + ':' + (utils.round(values[propertyName], config.roundingDecimals)) + unit + '; ');
+					if (!_exists(values[propertyName])) { continue; } // Avoid NaNs and nully values from working with undefined values
+					arr.push(propertyName + ':' + (_utils.round(values[propertyName], _defaults.roundingDecimals)) + unit + '; ');
 				}
 
 				arr.push('}\n');
@@ -286,28 +193,75 @@ var Animation = (function(utils, css, FilterProperties, EventEmitter, SpringCurv
 			return arr.join('');
 		},
 
+		_generateKeyframes: function() {
+			var stepIncrement = 0,
+				curveValues = this._curveValues,
+				stepDelta = 100 / (curveValues.length - 1),
+				deltas = this._deltas(),
+				keyFrames = {},
+				idx = 0, length = curveValues.length;
+
+			for (; idx < length; idx++) {
+				var curveValue = curveValues[idx],
+					position = _utils.round(stepIncrement * stepDelta, _defaults.roundingDecimals),
+					currentKeyFrame = {};
+
+				var propertyName;
+				for (propertyName in this._currentProperties) {
+					currentKeyFrame[propertyName] = curveValue * deltas[propertyName] + this._from[propertyName];
+				}
+
+				keyFrames[position] = currentKeyFrame;
+				stepIncrement++;
+			}
+
+			return keyFrames;
+		},
+
 		_deltas: function() {
 			var deltas = {},
 				key;
-			for (key in this.viewProperties) {
-				if (!_exists(this.viewProperties[key])) { continue; }
-				console.log(this.ourProperties[key]);
-				deltas[key] = (this.ourProperties[key] - this.viewProperties[key]) / 100.0;
+			for (key in this._currentProperties) {
+				deltas[key] = (this._currentProperties[key] - this._from[key]) / 100.0;
 			}
 			return deltas;
 		},
 
-		_parseCurve: function(curve) {
-			curve = (curve || '').toLowerCase();
-			
-			var factor = config.timeSpeedFactor,
+		_parseCurve: function(config) {
+			var factor = _defaults.timeSpeedFactor,
 				precision = this.precision * factor,
-				values = utils.parseCurve(curve, 'spring');
+				time = this.time * factor;
 
-			return SpringCurve(values[0], values[1], values[2], precision);
+			if (config.spring) {
+				var spring = config.spring;
+				return SpringCurve(spring[0], spring[1], spring[2], precision);
+			}
+
+			/*if (curve === 'linear') {
+				return bezier.defaults.Linear(this.precision, time);
+			} else if (curve === 'ease') {
+				return bezier.defaults.Ease(this.precision, time);
+			} else if (curve === 'ease-in') {
+				return bezier.defaults.EaseIn(this.precision, time);
+			} else if (curve === 'ease-out') {
+				return bezier.defaults.EaseOut(this.precision, time);
+			} else if (curve === 'ease-in-out') {
+				return bezier.defaults.EaseInOut(this.precision, time);
+			} else if (curve.indexOf('bezier-curve') > -1) {
+				value = _utils.parseCurve(curve, 'bezier-curve');
+				return bezier.BezierCurve(value[0], value[1], value[2], value[3], precision, time);
+			} else if (curve.indexOf('spring') > -1) {
+				value = _utils.parseCurve(curve, 'spring');
+				console.log('curve: ', curve);
+				console.log('value: ', value);
+				return SpringCurve(value[0], value[1], value[2], precision);
+			}
+
+			console.log('Animation.parseCurve: could not parse curve ', curve);
+			return bezier.defaults.Linear(this.precision, this.time);*/
 		}
 	});
 
 	return Animation;
 
-}(Utils, Css, FilterProperties, EventEmitter, SpringCurve, Matrix));
+}(Utils, Props, Css, EventEmitter, SpringCurve, Bezier, Matrix));
