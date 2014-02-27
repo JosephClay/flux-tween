@@ -41,7 +41,7 @@ var Fallback = (function() {
 		if (this.origin) { this.view.style[_props.transformOrigin] = this.origin; }
 	};
 
-	_utils.extend(Fallback.prototype, Animation.prototype, {
+	_extend(Fallback.prototype, Animation.prototype, {
 
 		start: function() {
 			this._aggregateCurrentProperties();
@@ -122,7 +122,7 @@ var Fallback = (function() {
 				for (propertyName in _animatableCssProperties) {
 					unit = _animatableCssProperties[propertyName];
 					if (!_exists(values[propertyName])) { continue; } // Avoid NaNs and nully values from working with undefined values
-					styles.css[propertyName] = (_utils.round(values[propertyName], _defaults.roundingDecimals)) + unit;
+					styles.css[propertyName] = (_round(values[propertyName], _defaults.roundingDecimals)) + unit;
 				}
 
 				obj[position] = styles;

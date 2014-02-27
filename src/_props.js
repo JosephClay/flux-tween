@@ -1,5 +1,5 @@
 var _props = {
-	animationEvent: _utils.keyValTest({
+	animationEvent: _keyValTest({
 		'-webkit-animation': 'webkitAnimationEnd',
 		'-moz-animation': 'animationend',
 		'-o-animation': 'oAnimationEnd',
@@ -7,7 +7,7 @@ var _props = {
 		'animation': 'animationend'
 	}),
 
-	transform: _utils.propTest([
+	transform: _propTest([
 		'transform',
 		'msTransform',
 		'oTransform',
@@ -15,7 +15,7 @@ var _props = {
 		'webkitTransform'
 	]),
 
-	transformOrigin: _utils.propTest([
+	transformOrigin: _propTest([
 		'transformOrigin',
 		'msTransformOrigin',
 		'oTransformOrigin',

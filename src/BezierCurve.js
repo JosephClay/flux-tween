@@ -72,7 +72,7 @@ var BezierCurve = (function() {
 		this._time = time;
 		this._fps = fps;
 	};
-	_utils.extend(Bezier, {
+	_extend(Bezier, {
 		Linear: function(time, fps) {
 			return new Bezier(0, 0, 1, 1, time, fps);
 		},
@@ -103,7 +103,7 @@ var BezierCurve = (function() {
 		}
 	});
 
-	_utils.extend(Bezier.prototype, {
+	_extend(Bezier.prototype, {
 		all: function() {
 			var steps = ((this._time / 1000) * this._fps) - 1;
 			if (steps > 3000) { throw Error('Bezier: too many values'); }

@@ -12,7 +12,7 @@ var EventEmitter = (function() {
 	EventEmitter.prototype = {
 		emit: function() {
 			var event = arguments[0],
-				args = arguments.length >= 2 ? _utils.slice(arguments) : [];
+				args = arguments.length >= 2 ? _slice(arguments) : [];
 			
 			_eventCheck(event);
 			

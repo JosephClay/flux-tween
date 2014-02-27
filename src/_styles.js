@@ -1,5 +1,5 @@
 var _styles = {
-	animationDuration: _utils.propTest([
+	animationDuration: _propTest([
 		'animation-duration',
 		'-ms-animation-duration',
 		'-o-animation-duration',
@@ -7,7 +7,7 @@ var _styles = {
 		'-webkit-animation-duration'
 	]),
 
-	animationName: _utils.propTest([
+	animationName: _propTest([
 		'animation-name',
 		'-ms-animation-name',
 		'-o-animation-name',
@@ -15,7 +15,7 @@ var _styles = {
 		'-webkit-animation-name'
 	]),
 
-	animationKeyFrame: _utils.keyValTest({
+	animationKeyFrame: _keyValTest({
 		'-webkit-animation-name': '-webkit-keyframes',
 		'-moz-animation-name': '-moz-keyframes',
 		'-o-animation-name': '-o-keyframes',
@@ -23,7 +23,7 @@ var _styles = {
 		'animation-name': 'keyframes'
 	}),
 
-	animationTimingFunction: _utils.propTest([
+	animationTimingFunction: _propTest([
 		'animation-timing-function',
 		'-ms-animation-timing-function',
 		'-o-animation-timing-function',
@@ -31,7 +31,7 @@ var _styles = {
 		'-webkit-animation-timing-function'
 	]),
 
-	animationFillMode: _utils.propTest([
+	animationFillMode: _propTest([
 		'animation-fill-mode',
 		'-ms-animation-fill-mode',
 		'-o-animation-fill-mode',
@@ -39,7 +39,7 @@ var _styles = {
 		'-webkit-animation-fill-mode'
 	]),
 
-	backfaceVisibility: _utils.propTest([
+	backfaceVisibility: _propTest([
 		'backface-visibility',
 		'-ms-backface-visibility',
 		'-o-backface-visibility',
@@ -47,7 +47,7 @@ var _styles = {
 		'-webkit-backface-visibility'
 	]),
 
-	transform: _utils.propTest([
+	transform: _propTest([
 		'transform',
 		'-ms-transform',
 		'-o-transform',

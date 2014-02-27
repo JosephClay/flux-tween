@@ -90,11 +90,11 @@ var View = (function() {
 		this.style = this.elem.style;
 		this.properties = props || {};
 
-		this._matrix = new Matrix(new _utils.WebMatrix(this.elem.style[_props.transform]));
+		this._matrix = new Matrix(new WebMatrix(this.elem.style[_props.transform]));
 		this._bindEnd();
 	};
 
-	_utils.extend(Element.prototype, EventEmitter.prototype, {
+	_extend(Element.prototype, EventEmitter.prototype, {
 		_bindEnd: function() {
 			var self = this;
 			this.elem.addEventListener(_props.animationEvent, function() {
@@ -116,7 +116,7 @@ var View = (function() {
 
 			this.properties = _ensureProperties(this, this.properties, args.properties);
 
-			var animation = (_useFallback) ? new Animation(this, args) : new Fallback(this, args);
+			var animation = (_canHwAccel) ? new Animation(this, args) : new Fallback(this, args);
 			animation.start(callback);
 			return animation;
 		},
@@ -127,7 +127,7 @@ var View = (function() {
 		},
 		
 		getComputedMatrix: function() {
-			return new _utils.WebMatrix(this.getComputedStyle()[_props.transform]);
+			return new WebMatrix(this.getComputedStyle()[_props.transform]);
 		},
 
 		getComputedStyle: function() {

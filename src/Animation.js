@@ -32,7 +32,7 @@ var Animation = (function() {
 		if (this.origin) { this.view.style[_props.transformOrigin] = this.origin; }
 	};
 
-	_utils.extend(Animation.prototype, EventEmitter.prototype, {
+	_extend(Animation.prototype, EventEmitter.prototype, {
 
 		start: function() {
 			
@@ -116,7 +116,7 @@ var Animation = (function() {
 			}
 
 			this.view.setMatrix(new Matrix(this.view.getComputedMatrix()));
-			this.view.style = _utils.extend(this.view.style, endStyles);
+			this.view.style = _extend(this.view.style, endStyles);
 			
 			this.view.removeClass(this._animationName);
 			_css.removeStyle(this._styleTag);
@@ -153,7 +153,7 @@ var Animation = (function() {
 				for (propertyName in _animatableCssProperties) {
 					unit = _animatableCssProperties[propertyName];
 					if (!_exists(values[propertyName])) { continue; } // Avoid NaNs and nully values from working with undefined values
-					arr.push(propertyName + ':' + (_utils.round(values[propertyName], _defaults.roundingDecimals)) + unit + '; ');
+					arr.push(propertyName + ':' + (_round(values[propertyName], _defaults.roundingDecimals)) + unit + '; ');
 				}
 
 				arr.push('}');
@@ -172,7 +172,7 @@ var Animation = (function() {
 
 			for (; idx < length; idx++) {
 				var curveValue = curveValues[idx],
-					position = _utils.round(stepIncrement * stepDelta, _defaults.roundingDecimals),
+					position = _round(stepIncrement * stepDelta, _defaults.roundingDecimals),
 					currentKeyFrame = {};
 
 				var propertyName;

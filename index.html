@@ -22,22 +22,10 @@
 		<script src="https://rawgithub.com/jfsiii/XCSSMatrix/master/dist/browserify/XCSSMatrix.js"></script>
 		<script src="https://rawgithub.com/sole/tween.js/master/src/Tween.js"></script>
 
-		<script src="src/_intro.js"></script>
-		<script src="src/_utils.js"></script>
-		<script src="src/_css.js"></script>
-		<script src="src/_props.js"></script>
-		<script src="src/_styles.js"></script>
-		<script src="src/_checks.js"></script>
-		<script src="src/EventEmitter.js"></script>
-		<script src="src/Matrix.js"></script>
-		<script src="src/SpringCurve.js"></script>
-		<script src="src/BezierCurve.js"></script>
-		<script src="src/View.js"></script>
-		<script src="src/Animation.js"></script>
-		<script src="src/Fallback.js"></script>
+		<script src="dist/0.0.1/AnimJS-0.0.1.js"></script>
 		<script>
 
-			var view = new View(document.getElementById('Box')/*, {
+			var view = new Anim(document.getElementById('Box')/*, {
 				x: 100,
 				y: 100,
 				width: 251,
@@ -48,7 +36,7 @@
 				rotationX: 0
 			}*/);
 
-			var foo = view.animate({
+			var animation = view.animate({
 				properties: {
 					scale: 1.8,
 					x: 300,
@@ -66,11 +54,11 @@
 
 			setTimeout(function() {
 				// Reverse
-				foo.reverse();
+				animation.reverse();
 
 				// Restart
 				setTimeout(function() {
-					foo.start();
+					animation.start();
 				}, 2 * 1000);
 
 			}, 2 * 1000);

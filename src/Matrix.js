@@ -1,7 +1,7 @@
 var Matrix = (function() {
 
 	var _PI = Math.PI,
-		_emptyMatrix = new _utils.WebMatrix(),
+		_emptyMatrix = new WebMatrix(),
 		_decompose = function(m) {
 			var result = {};
 			result.translation = {
@@ -23,7 +23,7 @@ var Matrix = (function() {
 		};
 
 	var Matrix = function(matrix) {
-		if (matrix instanceof _utils.WebMatrix) { this.from(matrix); }
+		if (matrix instanceof WebMatrix) { this.from(matrix); }
 	};
 
 	Matrix.prototype = {
