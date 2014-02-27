@@ -1,5 +1,4 @@
-// TODO: non -webkit css
-var Animation = (function(_utils, _props, _css, EventEmitter, SpringCurve, Bezier, Matrix, undefined) {
+var Animation = (function() {
 	
 	var _defaults = {
 			timeSpeedFactor: 1,
@@ -7,27 +6,7 @@ var Animation = (function(_utils, _props, _css, EventEmitter, SpringCurve, Bezie
 			fps: 60
 		},
 		_PREFIX = 'animationjs-animation-',
-		_id = 0,
-		_exists = function(obj) {
-			return (obj !== null && obj !== undefined);
-		};
-
-	var _animatableMatrixProperties = [
-			'x',
-			'y',
-			'z',
-			'scaleX',
-			'scaleY',
-			'scaleZ',
-			'rotationX',
-			'rotationY',
-			'rotationZ'
-		],
-		_animatableCssProperties = {
-			opacity: '',
-			width: 'px',
-			height: 'px'
-		};
+		_id = 0;
 
 	var Animation = function(view, options) {
 		EventEmitter.call(this);
@@ -50,27 +29,33 @@ var Animation = (function(_utils, _props, _css, EventEmitter, SpringCurve, Bezie
 		this._curveValues = this._parseCurve(options);
 		this._totalTime = (this._curveValues.length / this.precision) * 1000;
 
-		this._normalizeShortHand(this._from);
-		this._normalizeShortHand(this._to);
-
 		if (this.origin) { this.view.style[_props.transformOrigin] = this.origin; }
 	};
 
-	_.extend(Animation.prototype, EventEmitter.prototype, {
-
-		_normalizeShortHand: function(obj) {
-			if (obj.scale) {
-				obj.scaleX = obj.scale;
-				obj.scaleY = obj.scale;
-			}
-			if (obj.rotation) {
-				obj.rotationZ = to.rotation;
-			}
-		},
+	_utils.extend(Animation.prototype, EventEmitter.prototype, {
 
 		start: function() {
 			
-			// Aggregate the properties we're animating to ----
+			this._aggregateCurrentProperties();
+			
+			var numOfChanges = this._omitUnchangedProperties();
+			if (!numOfChanges) { return; }
+			
+			this._styleTag = _css.addStyle(
+				this._generateKeyframeCss() + ' .' + this._animationName + ' { ' +
+					_styles.animationDuration + ': ' + (this._totalTime / 1000) + 's;' +
+					_styles.animationName + ': ' + this._animationName + ';' +
+					_styles.animationTimingFunction + ': linear;' +
+					_styles.animationFillMode + ': both;' +
+					_styles.backfaceVisibility + ': visible;' +
+				'}'
+			);
+
+			this.view.addClass(this._animationName);
+			this.view.on('end', this._cleanup);
+		},
+
+		_aggregateCurrentProperties: function() {
 			var to = this._to,
 				idx = _animatableMatrixProperties.length,
 				key;
@@ -83,9 +68,11 @@ var Animation = (function(_utils, _props, _css, EventEmitter, SpringCurve, Bezie
 				if (!_exists(to[key])) { continue; } // If we're not going to it, skip
 				this._currentProperties[key] = to[key];
 			}
-			
-			// Omit properties that aren't changing ----
-			var propertyCount = 0;
+		},
+
+		_omitUnchangedProperties: function() {
+			var propertyCount = 0,
+				key;
 			for (key in this._currentProperties) {
 				// No change, we don't care about it
 				if (this._from[key] === this._currentProperties[key]) {
@@ -96,26 +83,7 @@ var Animation = (function(_utils, _props, _css, EventEmitter, SpringCurve, Bezie
 				propertyCount += 1;
 			}
 
-			// Stop if there's nothing to animate ----
-			if (propertyCount === 0) { return; } // Nothing to animate
-			
-			// TODO: Keep this value so that we don't have to recalcuate the
-			// animtion if start get called again
-			this.keyFrameAnimationCSS = this._generateKeyframeCss();
-
-			// TODO: Optimize
-			this.styleTag = _css.addStyle([
-				this.keyFrameAnimationCSS, ' .', this._animationName, ' { ',
-					'-webkit-animation-duration: ' + (this._totalTime / 1000) + 's;',
-					'-webkit-animation-name: ' + this._animationName + ';',
-					'-webkit-animation-timing-function: linear;',
-					'-webkit-animation-fill-mode: both;',
-					'-webkit-backface-visibility: visible;',
-				'}'
-			].join(''));
-
-			this.view.addClass(this._animationName);
-			this.view.on('end', this._cleanup);
+			return propertyCount;
 		},
 
 		reverse: function() {
@@ -148,30 +116,31 @@ var Animation = (function(_utils, _props, _css, EventEmitter, SpringCurve, Bezie
 			}
 
 			this.view.setMatrix(new Matrix(this.view.getComputedMatrix()));
-			this.view.style = _.extend(this.view.style, endStyles);
+			this.view.style = _utils.extend(this.view.style, endStyles);
 			
 			this.view.removeClass(this._animationName);
-			_css.removeStyle(this.styleTag);
+			_css.removeStyle(this._styleTag);
+			this._styleTag = null;
 
 			this.view.properties = this._to;
 
-			if (_.isFunction(this.callback)) { this.callback(this); }
+			if (this.callback) { this.callback(this); }
 			return this.emit('end');
 		},
 
 		_generateKeyframeCss: function() {
 			var keyFrames = this._generateKeyframes(),
-				arr = [], // TODO: Optimize
+				arr = [],
 				matrix = new Matrix();
 			
-			arr.push('@-webkit-keyframes ' + this._animationName + ' {\n');
+			arr.push('@'+ _styles.animationKeyFrame +' ' + this._animationName + ' {');
 
 			var position, values, propertyName, unit, idx;
 			for (position in keyFrames) {
 				values = keyFrames[position];
 
-				arr.push('\t' + position + '% {');
-				arr.push('-webkit-transform: ');
+				arr.push(position + '% {');
+				arr.push(_styles.transform + ': ');
 
 				idx = _animatableMatrixProperties.length;
 				while (idx--) {
@@ -187,9 +156,9 @@ var Animation = (function(_utils, _props, _css, EventEmitter, SpringCurve, Bezie
 					arr.push(propertyName + ':' + (_utils.round(values[propertyName], _defaults.roundingDecimals)) + unit + '; ');
 				}
 
-				arr.push('}\n');
+				arr.push('}');
 			}
-			arr.push('}\n');
+			arr.push('}');
 			return arr.join('');
 		},
 
@@ -234,34 +203,28 @@ var Animation = (function(_utils, _props, _css, EventEmitter, SpringCurve, Bezie
 
 			if (config.spring) {
 				var spring = config.spring;
-				return SpringCurve(spring[0], spring[1], spring[2], precision);
+				return SpringCurve.generate(spring.tension, spring.friction, spring.velocity, precision);
 			}
 
-			/*if (curve === 'linear') {
-				return bezier.defaults.Linear(this.precision, time);
-			} else if (curve === 'ease') {
-				return bezier.defaults.Ease(this.precision, time);
-			} else if (curve === 'ease-in') {
-				return bezier.defaults.EaseIn(this.precision, time);
-			} else if (curve === 'ease-out') {
-				return bezier.defaults.EaseOut(this.precision, time);
-			} else if (curve === 'ease-in-out') {
-				return bezier.defaults.EaseInOut(this.precision, time);
-			} else if (curve.indexOf('bezier-curve') > -1) {
-				value = _utils.parseCurve(curve, 'bezier-curve');
-				return bezier.BezierCurve(value[0], value[1], value[2], value[3], precision, time);
-			} else if (curve.indexOf('spring') > -1) {
-				value = _utils.parseCurve(curve, 'spring');
-				console.log('curve: ', curve);
-				console.log('value: ', value);
-				return SpringCurve(value[0], value[1], value[2], precision);
+			if (config.curve) {
+				var curve = config.curve;
+				if (curve === 'linear') {
+					return BezierCurve.generate(BezierCurve.Linear, this.precision, time);
+				} else if (curve === 'ease') {
+					return BezierCurve.generate(BezierCurve.Ease, this.precision, time);
+				} else if (curve === 'ease-in') {
+					return BezierCurve.generate(BezierCurve.EaseIn, this.precision, time);
+				} else if (curve === 'ease-out') {
+					return BezierCurve.generate(BezierCurve.EaseOut, this.precision, time);
+				} else if (curve === 'ease-in-out') {
+					return BezierCurve.generate(BezierCurve.EaseInOut, this.precision, time);
+				}
 			}
 
-			console.log('Animation.parseCurve: could not parse curve ', curve);
-			return bezier.defaults.Linear(this.precision, this.time);*/
+			return BezierCurve.generate(BezierCurve.Linear, this.precision, this.time);
 		}
 	});
 
 	return Animation;
 
-}(Utils, Props, Css, EventEmitter, SpringCurve, Bezier, Matrix));
+}());

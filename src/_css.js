@@ -1,4 +1,4 @@
-var Css = (function(document, undefined) {
+var _css = (function() {
 
 	var _head = document.head;
 
@@ -13,4 +13,4 @@ var Css = (function(document, undefined) {
 		}
 	};
 
-}(document));
+}());

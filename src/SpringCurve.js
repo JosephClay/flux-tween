@@ -57,6 +57,7 @@ var SpringCurve = (function() {
 		this.startValue = 0;
 		this.currentValue = 0;
 		this.isMoving = true;
+		this.results = [];
 	};
 
 	Spring.prototype = {
@@ -91,7 +92,7 @@ var SpringCurve = (function() {
 
 		all: function() {
 			var count = 0,
-				results = [];
+				results = this.results;
 			while (this.isMoving) {
 				count++;
 				if (count > _CAP) { throw new Error('Spring: too many values'); }
@@ -100,12 +101,22 @@ var SpringCurve = (function() {
 			}
 
 			return results;
+		},
+
+		time: function() {
+			return this.results.length * this.speed;
 		}
 	};
 
-	return function(tension, friction, velocity, fps) {
+	Spring.create = function(tension, friction, velocity, fps) {
+		return new Spring(tension, friction, velocity, 1 / fps);
+	};
+
+	Spring.generate = function(tension, friction, velocity, fps) {
 		var spring = new Spring(tension, friction, velocity, 1 / fps);
 		return spring.all();
 	};
+
+	return Spring;
 
 }());

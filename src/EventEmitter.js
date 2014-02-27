@@ -1,4 +1,4 @@
-var EventEmitter = (function(utils) {
+var EventEmitter = (function() {
 
 	var _eventCheck = function(event) {
 		if (event !== '') { return; }
@@ -12,7 +12,7 @@ var EventEmitter = (function(utils) {
 	EventEmitter.prototype = {
 		emit: function() {
 			var event = arguments[0],
-				args = arguments.length >= 2 ? utils.slice(arguments) : [];
+				args = arguments.length >= 2 ? _utils.slice(arguments) : [];
 			
 			_eventCheck(event);
 			
@@ -84,4 +84,4 @@ var EventEmitter = (function(utils) {
 
 	return EventEmitter;
 
-}(Utils));
+}());

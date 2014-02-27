@@ -1,4 +1,4 @@
-var Matrix = (function(_utils) {
+var Matrix = (function() {
 
 	var _PI = Math.PI,
 		_emptyMatrix = new _utils.WebMatrix(),
@@ -158,4 +158,4 @@ var Matrix = (function(_utils) {
 
 	return Matrix;
 
-}(Utils));
+}());

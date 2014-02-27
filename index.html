@@ -19,24 +19,25 @@
 		
 		<div id="Box" class="box"></div>
 
-		<script src="libs/underscore.js"></script>
-		<script src="libs/XCSSMatrix.js"></script>
+		<script src="https://rawgithub.com/jfsiii/XCSSMatrix/master/dist/browserify/XCSSMatrix.js"></script>
+		<script src="https://rawgithub.com/sole/tween.js/master/src/Tween.js"></script>
 
-		<script src="src/Utils.js"></script>
-		<script src="src/Props.js"></script>
-		<script src="src/Css.js"></script>
+		<script src="src/_intro.js"></script>
+		<script src="src/_utils.js"></script>
+		<script src="src/_css.js"></script>
+		<script src="src/_props.js"></script>
+		<script src="src/_styles.js"></script>
+		<script src="src/_checks.js"></script>
 		<script src="src/EventEmitter.js"></script>
 		<script src="src/Matrix.js"></script>
 		<script src="src/SpringCurve.js"></script>
+		<script src="src/BezierCurve.js"></script>
 		<script src="src/View.js"></script>
-		<script src="src/Bezier.js"></script>
 		<script src="src/Animation.js"></script>
+		<script src="src/Fallback.js"></script>
 		<script>
 
-			// Create the logo view
-			var view = new View(document.getElementById('Box'), {
-				// TODO: Reader for these properties so
-				// they don't have to be set manually
+			var view = new View(document.getElementById('Box')/*, {
 				x: 100,
 				y: 100,
 				width: 251,
@@ -45,7 +46,7 @@
 				scaleY: 1,
 				opacity: 0,
 				rotationX: 0
-			});
+			}*/);
 
 			var foo = view.animate({
 				properties: {
@@ -55,8 +56,12 @@
 					opacity: 1,
 					rotationX: 180
 				},
-				// TODO: make this a named object
-				spring: [80, 15, 1000]
+				spring: {
+					tension: 80,
+					friction: 15,
+					velocity: 1000
+				}
+				// curve: 'ease-in-out'
 			});
 
 			setTimeout(function() {
@@ -69,6 +74,12 @@
 				}, 2 * 1000);
 
 			}, 2 * 1000);
+
+			var animate = function() {
+				TWEEN.update();
+				requestAnimationFrame(animate);
+			};
+			animate();
 
 		</script>
 	</body>
