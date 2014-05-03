@@ -1,1 +1,0 @@
-var Anim = (function(window, document, undefined) {

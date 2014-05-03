@@ -1,4 +1,0 @@
-
-	return View;
-
-}(window, document));
