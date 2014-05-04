@@ -14,7 +14,7 @@ var _defaults = {
 		roundingDecimals: 5,
 		fps: 60
 	},
-	_PREFIX = 'animationjs-animation-',
+	_PREFIX = 'animjs-animation-',
 	_id = 0;
 
 var Animation = function(view, options) {
@@ -44,7 +44,6 @@ var Animation = function(view, options) {
 _.extend(Animation.prototype, EventEmitter.prototype, {
 
 	start: function() {
-		
 		this._aggregateCurrentProperties();
 		
 		var numOfChanges = this._omitUnchangedProperties();
@@ -117,14 +116,14 @@ _.extend(Animation.prototype, EventEmitter.prototype, {
 	_cleanup: function(completed) {
 		this.view.off('end', this._cleanup);
 
-		var computedStyles = this.view.getComputedStyle(),
+		var computedStyles = this.view._getComputedStyle(),
 			endStyles = {},
 			key;
 		for (key in _animatables.css) {
 			endStyles[key] = computedStyles[key];
 		}
 
-		this.view.setMatrix(new Matrix(this.view.getComputedMatrix()));
+		this.view._setMatrix(new Matrix(this.view._getComputedMatrix()));
 		this.view.style = _.extend(this.view.style, endStyles);
 		
 		this.view.removeClass(this._animationName);

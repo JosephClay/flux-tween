@@ -261,7 +261,7 @@ var _defaults = {
 		roundingDecimals: 5,
 		fps: 60
 	},
-	_PREFIX = 'animationjs-animation-',
+	_PREFIX = 'animjs-animation-',
 	_id = 0;
 
 var Animation = function(view, options) {
@@ -291,7 +291,6 @@ var Animation = function(view, options) {
 _.extend(Animation.prototype, EventEmitter.prototype, {
 
 	start: function() {
-		
 		this._aggregateCurrentProperties();
 		
 		var numOfChanges = this._omitUnchangedProperties();
@@ -364,14 +363,14 @@ _.extend(Animation.prototype, EventEmitter.prototype, {
 	_cleanup: function(completed) {
 		this.view.off('end', this._cleanup);
 
-		var computedStyles = this.view.getComputedStyle(),
+		var computedStyles = this.view._getComputedStyle(),
 			endStyles = {},
 			key;
 		for (key in _animatables.css) {
 			endStyles[key] = computedStyles[key];
 		}
 
-		this.view.setMatrix(new Matrix(this.view.getComputedMatrix()));
+		this.view._setMatrix(new Matrix(this.view._getComputedMatrix()));
 		this.view.style = _.extend(this.view.style, endStyles);
 		
 		this.view.removeClass(this._animationName);
@@ -938,13 +937,7 @@ var _ = require('./support/utils'),
 	WebMatrix = require('./polyfills/WebMatrix'),
 	Animation = require('./animation/Animation');
 
-var _addClass = function(elem, className) {
-		return elem.classList.add(className);
-	},
-	_removeClass = function(elem, className) {
-		elem.classList.remove(className);
-	},
-	_applyShorthand = function(obj) {
+var _applyShorthand = function(obj) {
 		if (obj.scale) {
 			obj.scaleX = obj.scale;
 			obj.scaleY = obj.scale;
@@ -994,7 +987,7 @@ var _addClass = function(elem, className) {
 	_getCurrentMatrixProperties = function(view) {
 		var obj = {},
 			idx = _animatables.matrix.length,
-			matrix = new Matrix(view.getComputedMatrix()),
+			matrix = new Matrix(view._getComputedMatrix()),
 			key;
 		while (idx--) {
 			key = _animatables.matrix[idx];
@@ -1004,7 +997,7 @@ var _addClass = function(elem, className) {
 	},
 	_getCurrentCssProperties = function(view) {
 		var obj = {},
-			styles = view.getComputedStyle(),
+			styles = view._getComputedStyle(),
 			key;
 		for (key in _animatables.css) {
 			obj[key] = styles[key];
@@ -1013,7 +1006,9 @@ var _addClass = function(elem, className) {
 		return obj;
 	};
 
-var Element = function(elem, props) {
+var Anim = window.Anim = function(elem, props) {
+	if (!(this instanceof Anim)) { return new Anim(elem, props); }
+
 	EventEmitter.call(this);
 
 	this.elem = elem;
@@ -1024,7 +1019,7 @@ var Element = function(elem, props) {
 	this._bindEnd();
 };
 
-_.extend(Element.prototype, EventEmitter.prototype, {
+_.extend(Anim.prototype, EventEmitter.prototype, {
 	_bindEnd: function() {
 		var self = this;
 		this.elem.addEventListener(_props.animationEvent, function() {
@@ -1033,11 +1028,15 @@ _.extend(Element.prototype, EventEmitter.prototype, {
 	},
 
 	addClass: function(className) {
-		_addClass(this.elem, className);
+		this.elem.classList.add(className);
 	},
 
 	removeClass: function(className) {
-		_removeClass(this.elem, className);
+		this.elem.classList.remove(className);
+	},
+
+	getClass: function() {
+		return this._animation || '';
 	},
 
 	animate: function(args, callback) {
@@ -1046,26 +1045,26 @@ _.extend(Element.prototype, EventEmitter.prototype, {
 
 		this.properties = _ensureProperties(this, this.properties, args.properties);
 
-		var animation = (_check.canHwAccel) ? new Animation(this, args) : new Fallback(this, args);
+		var animation = this._animation = (_check.canHwAccel) ? new Animation(this, args) : new Fallback(this, args);
+		
 		animation.start(callback);
+
 		return animation;
 	},
 
-	setMatrix: function(matrix) {
+	_setMatrix: function(matrix) {
 		this._matrix = matrix;
 		this.style[_props.transform] = this._matrix.css();
 	},
 	
-	getComputedMatrix: function() {
-		return new WebMatrix(this.getComputedStyle()[_props.transform]);
+	_getComputedMatrix: function() {
+		return new WebMatrix(this._getComputedStyle()[_props.transform]);
 	},
 
-	getComputedStyle: function() {
+	_getComputedStyle: function() {
 		return document.defaultView.getComputedStyle(this.elem);
 	}
 });
-
-window.Anim = Element;
 },{"./EventEmitter":1,"./Matrix":2,"./animation/Animation":3,"./animation/Fallback":4,"./polyfills/WebMatrix":8,"./styles/animatables":9,"./styles/props":10,"./support/supports":13,"./support/utils":14}],8:[function(require,module,exports){
 module.exports = window.WebKitCSSMatrix ? window.WebKitCSSMatrix : XCSSMatrix;
 
