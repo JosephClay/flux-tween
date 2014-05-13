@@ -78,8 +78,8 @@ var _applyShorthand = function(obj) {
 		return obj;
 	};
 
-var Anim = window.Anim = function(elem, props) {
-	if (!(this instanceof Anim)) { return new Anim(elem, props); }
+var View = window.Anim = function(elem, props) {
+	if (!(this instanceof View)) { return new View(elem, props); }
 
 	EventEmitter.call(this);
 
@@ -91,7 +91,12 @@ var Anim = window.Anim = function(elem, props) {
 	this._bindEnd();
 };
 
-_.extend(Anim.prototype, EventEmitter.prototype, {
+_.extend(View.prototype, EventEmitter.prototype, {
+	to: function(goTo) {
+		this._to = goTo;
+		return this;
+	},
+
 	_bindEnd: function() {
 		var self = this;
 		this.elem.addEventListener(_props.animationEvent, function() {
@@ -111,17 +116,35 @@ _.extend(Anim.prototype, EventEmitter.prototype, {
 		return this._animation || '';
 	},
 
-	animate: function(args, callback) {
+	animate: function(goTo) {
+		goTo = goTo || this._to;
+
 		_applyShorthand(this.properties);
-		_applyShorthand(args.properties);
+		_applyShorthand(goTo.properties);
 
-		this.properties = _ensureProperties(this, this.properties, args.properties);
+		this.properties = _ensureProperties(this, this.properties, goTo.properties);
 
-		var animation = this._animation = (_check.canHwAccel) ? new Animation(this, args) : new Fallback(this, args);
-		
-		animation.start(callback);
+		this._animation = (_check.canHwAccel) ? new Animation(this, goTo) : new Fallback(this, goTo);
 
-		return animation;
+		return this;
+	},
+
+	start: function(callback) {
+		var anim = this._animation;
+		if (anim) { this._animation.start(callback); }
+		return this;
+	},
+
+	reverse: function(callback) {
+		var anim = this._animation;
+		if (anim) { this._animation.reverse(callback); }
+		return this;
+	},
+
+	stop: function() {
+		var anim = this._animation;
+		if (anim) { anim.stop(); }
+		return this;
 	},
 
 	_setMatrix: function(matrix) {

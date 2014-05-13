@@ -27,6 +27,7 @@ var Animation = function(view, options) {
 	this.time = options.time || 1000;
 	this.curve = options.curve || 'linear';
 	
+	this._isRunning = false;
 	this._to = options.properties;
 	this._from = view.properties;
 	this._id = (_id += 1);
@@ -43,7 +44,12 @@ var Animation = function(view, options) {
 
 _.extend(Animation.prototype, EventEmitter.prototype, {
 
-	start: function() {
+	start: function(callback) {
+		if (this._isRunning) { return; }
+		this._isRunning = true;
+
+		this.callback = callback || this.callback;
+		
 		this._aggregateCurrentProperties();
 		
 		var numOfChanges = this._omitUnchangedProperties();
@@ -94,10 +100,10 @@ _.extend(Animation.prototype, EventEmitter.prototype, {
 		return propertyCount;
 	},
 
-	reverse: function() {
+	reverse: function(callback) {
 		var animation = new Animation(this.view, {
 			properties: this._from,
-			callback: this.callback,
+			callback: callback || this.callback,
 			precision: this.precision,
 			origin: this.origin,
 			time: this.time,
@@ -105,7 +111,7 @@ _.extend(Animation.prototype, EventEmitter.prototype, {
 			spring: this._spring,
 			ease: this._ease
 		});
-		animation.start();
+		animation.start(callback);
 		return animation;
 	},
 
@@ -114,6 +120,7 @@ _.extend(Animation.prototype, EventEmitter.prototype, {
 	},
 
 	_cleanup: function(completed) {
+		this._isRunning = false;
 		this.view.off('end', this._cleanup);
 
 		var computedStyles = this.view._getComputedStyle(),

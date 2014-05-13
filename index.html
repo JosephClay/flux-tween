@@ -36,6 +36,7 @@
 				rotationX: 0
 			}*/);
 
+			debugger;
 			var animation = view.animate({
 				properties: {
 					scale: 1.8,
@@ -50,11 +51,16 @@
 					velocity: 1000
 				}
 				// curve: 'ease-in-out'
+			})
+			.start(function() {
+				console.log('start callback called!');
 			});
 
 			setTimeout(function() {
 				// Reverse
-				animation.reverse();
+				animation.reverse(function() {
+					console.log('reverse callback called');
+				});
 
 				// Restart
 				setTimeout(function() {
