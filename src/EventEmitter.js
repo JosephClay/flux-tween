@@ -24,7 +24,7 @@ EventEmitter.prototype = {
 			listener;
 		for (; idx < length; idx++) {
 			listener = reference[idx];
-			results.push(listener.apply(null, args));
+			results.push(listener && listener.apply(null, args));
 		}
 
 		return results;
