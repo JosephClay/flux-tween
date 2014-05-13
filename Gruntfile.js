@@ -17,13 +17,15 @@ module.exports = function(grunt) {
                         'window': 'window',
                         'document': 'document'
                     },
-                    safeUndef: true,
+                    safe_undefined: true,
                     main: 'main.js',
-                    dest: 'dist/rAnim.js'
+                    dest: 'dist/Anim.js',
+                    micro_paths: true
                 }
             }
         }
 	});
 
-	grunt.registerTask('default', ['browserify']);
+	//grunt.registerTask('default', ['browserify']);
+	grunt.registerTask('default', ['rquire']);
 };
