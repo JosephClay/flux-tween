@@ -25,47 +25,32 @@
 
 		<script src="dist/Anim.js"></script>
 		<script>
-
-			var view = new Anim(document.getElementById('Box')/*, {
-				x: 100,
-				y: 100,
-				width: 251,
-				height: 302,
-				scaleX: 1,
-				scaleY: 1,
-				opacity: 0,
-				rotationX: 0
-			}*/);
-
-			debugger;
-			var animation = view.animate({
-				properties: {
-					scale: 1.8,
-					x: 300,
-					y: 300,
-					opacity: 1,
-					rotationX: 180
-				},
-				spring: {
-					tension: 80,
-					friction: 15,
-					velocity: 1000
-				}
-				// curve: 'ease-in-out'
-			})
-			.start(function() {
-				console.log('start callback called!');
-			});
+			var anim = new Anim(document.getElementById('Box'))
+						.spring({
+								tension: 80,
+								friction: 15,
+								velocity: 1000
+						})
+						.to({
+							scale: 1.8,
+							x: 300,
+							y: 300,
+							opacity: 1,
+							rotationX: 180
+						})
+						.start(function() {
+							console.log('start callback called!');
+						});
 
 			setTimeout(function() {
 				// Reverse
-				animation.reverse(function() {
+				anim.reverse(function() {
 					console.log('reverse callback called');
 				});
 
 				// Restart
 				setTimeout(function() {
-					animation.start();
+					anim.start();
 				}, 2 * 1000);
 
 			}, 2 * 1000);

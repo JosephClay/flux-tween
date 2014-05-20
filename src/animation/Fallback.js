@@ -91,11 +91,11 @@ _.extend(Fallback.prototype, Animation.prototype, {
 	},
 
 	_applyKeyframeStyles: function(keyframe) {
-		self.view.style[_props.transform] = keyframe.transform;
+		this.view.elem.style[_props.transform] = keyframe.transform;
 
 		var key;
 		for (key in keyframe.css) {
-			self.view.style[key] = keyframe.css[key];
+			this.view.elem.style[key] = keyframe.css[key];
 		}
 	},
 
@@ -138,6 +138,8 @@ _.extend(Fallback.prototype, Animation.prototype, {
 
 		return obj;
 	},
+
+	reverse: function() {},
 
 	_parseCurve: function(config) {
 		var factor = _defaults.timeSpeedFactor,

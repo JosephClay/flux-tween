@@ -78,14 +78,14 @@ var _applyShorthand = function(obj) {
 		return obj;
 	};
 
-var View = window.Anim = function(elem, props) {
-	if (!(this instanceof View)) { return new View(elem, props); }
+var View = window.Anim = function(elem) {
+	if (!(this instanceof View)) { return new View(elem); }
 
 	EventEmitter.call(this);
 
 	this.elem = elem;
 	this.style = this.elem.style;
-	this.properties = props || {};
+	this.properties = {};
 
 	this._matrix = new Matrix(new WebMatrix(this.elem.style[_props.transform]));
 	this._bindEnd();
@@ -94,6 +94,16 @@ var View = window.Anim = function(elem, props) {
 _.extend(View.prototype, EventEmitter.prototype, {
 	to: function(goTo) {
 		this._to = goTo;
+		return this;
+	},
+
+	spring: function(spring) {
+		this._spring = spring;
+		return this;
+	},
+
+	curve: function(curve) {
+		this._curve = curve;
 		return this;
 	},
 
@@ -116,8 +126,18 @@ _.extend(View.prototype, EventEmitter.prototype, {
 		return this._animation || '';
 	},
 
-	animate: function(goTo) {
-		goTo = goTo || this._to;
+	start: function(callback) {
+		var anim = this._animation;
+		if (anim) {
+			this._animation.start(callback);
+			return this;
+		}
+		
+		var goTo = {
+			properties: this._to,
+			spring: this._spring,
+			curve: this._curve
+		};
 
 		_applyShorthand(this.properties);
 		_applyShorthand(goTo.properties);
@@ -125,13 +145,8 @@ _.extend(View.prototype, EventEmitter.prototype, {
 		this.properties = _ensureProperties(this, this.properties, goTo.properties);
 
 		this._animation = (_check.canHwAccel) ? new Animation(this, goTo) : new Fallback(this, goTo);
+		this._animation.start(callback);
 
-		return this;
-	},
-
-	start: function(callback) {
-		var anim = this._animation;
-		if (anim) { this._animation.start(callback); }
 		return this;
 	},
 
