@@ -49,14 +49,14 @@
         {
             "1": function(require, module, exports) {
                 var _ = require('11'),
-                	_props = require('8'),
+                	_props = require('9'),
                 	_check = require('10'),
                 	_animatables = require('7'),
 
                 	Matrix = require('3'),
                 	EventEmitter = require('2'),
                 	Fallback = require('5'),
-                	WebMatrix = require('6'),
+                	WebMatrix = require('12'),
                 	Animation = require('4');
 
                 var _applyShorthand = function(obj) {
@@ -128,14 +128,14 @@
                 		return obj;
                 	};
 
-                var View = window.Anim = function(elem, props) {
-                	if (!(this instanceof View)) { return new View(elem, props); }
+                var View = window.Anim = function(elem) {
+                	if (!(this instanceof View)) { return new View(elem); }
 
                 	EventEmitter.call(this);
 
                 	this.elem = elem;
                 	this.style = this.elem.style;
-                	this.properties = props || {};
+                	this.properties = {};
 
                 	this._matrix = new Matrix(new WebMatrix(this.elem.style[_props.transform]));
                 	this._bindEnd();
@@ -144,6 +144,16 @@
                 _.extend(View.prototype, EventEmitter.prototype, {
                 	to: function(goTo) {
                 		this._to = goTo;
+                		return this;
+                	},
+
+                	spring: function(spring) {
+                		this._spring = spring;
+                		return this;
+                	},
+
+                	curve: function(curve) {
+                		this._curve = curve;
                 		return this;
                 	},
 
@@ -166,8 +176,18 @@
                 		return this._animation || '';
                 	},
 
-                	animate: function(goTo) {
-                		goTo = goTo || this._to;
+                	start: function(callback) {
+                		var anim = this._animation;
+                		if (anim) {
+                			this._animation.start(callback);
+                			return this;
+                		}
+
+                		var goTo = {
+                			properties: this._to,
+                			spring: this._spring,
+                			curve: this._curve
+                		};
 
                 		_applyShorthand(this.properties);
                 		_applyShorthand(goTo.properties);
@@ -175,13 +195,8 @@
                 		this.properties = _ensureProperties(this, this.properties, goTo.properties);
 
                 		this._animation = (_check.canHwAccel) ? new Animation(this, goTo) : new Fallback(this, goTo);
+                		this._animation.start(callback);
 
-                		return this;
-                	},
-
-                	start: function(callback) {
-                		var anim = this._animation;
-                		if (anim) { this._animation.start(callback); }
                 		return this;
                 	},
 
@@ -248,7 +263,7 @@
                 	}
                 };
             },
-            "8": function(require, module, exports) {
+            "9": function(require, module, exports) {
                 var _tests = require('15');
 
                 module.exports = {
@@ -256,7 +271,7 @@
                 		'-webkit-animation': 'webkitAnimationEnd',
                 		'-moz-animation': 'animationend',
                 		'-o-animation': 'oAnimationEnd',
-                		'-ms-animation': 'msAnimationEnd',
+                		'-ms-animation': 'MSAnimationEnd',
                 		'animation': 'animationend'
                 	}),
 
@@ -305,14 +320,14 @@
                 };
             },
             "10": function(require, module, exports) {
-                var _styles = require('9');
+                var _styles = require('8');
 
                 module.exports = {
                 	canHwAccel: (_styles.animationDuration && _styles.animationKeyFrame && _styles.animationName && _styles.animationTimingFunction),
                 	canAnimate: !!_styles.transform
                 };
             },
-            "9": function(require, module, exports) {
+            "8": function(require, module, exports) {
                 var _tests = require('15');
 
                 module.exports = {
@@ -395,7 +410,7 @@
                 };
             },
             "3": function(require, module, exports) {
-                var WebMatrix = require('6');
+                var WebMatrix = require('12');
 
                 var _PI = Math.PI,
                 	_emptyMatrix = new WebMatrix(),
@@ -555,7 +570,7 @@
 
                 module.exports = Matrix;
             },
-            "6": function(require, module, exports) {
+            "12": function(require, module, exports) {
                 module.exports = window.WebKitCSSMatrix ? window.WebKitCSSMatrix : XCSSMatrix;
             },
             "2": function(require, module, exports) {
@@ -647,7 +662,7 @@
             },
             "5": function(require, module, exports) {
                 var _ = require('11'),
-                	_props = require('8'),
+                	_props = require('9'),
                 	_animatables = require('7'),
 
                 	Matrix = require('3'),
@@ -739,11 +754,11 @@
                 	},
 
                 	_applyKeyframeStyles: function(keyframe) {
-                		self.view.style[_props.transform] = keyframe.transform;
+                		this.view.elem.style[_props.transform] = keyframe.transform;
 
                 		var key;
                 		for (key in keyframe.css) {
-                			self.view.style[key] = keyframe.css[key];
+                			this.view.elem.style[key] = keyframe.css[key];
                 		}
                 	},
 
@@ -786,6 +801,8 @@
 
                 		return obj;
                 	},
+
+                	reverse: function() {},
 
                 	_parseCurve: function(config) {
                 		var factor = _defaults.timeSpeedFactor,
@@ -830,9 +847,9 @@
             },
             "4": function(require, module, exports) {
                 var _ = require('11'),
-                	_head = require('12'),
-                	_props = require('8'),
-                	_styles = require('9'),
+                	_head = require('6'),
+                	_props = require('9'),
+                	_styles = require('8'),
                 	_animatables = require('7'),
 
                 	Matrix = require('3'),
@@ -1084,7 +1101,7 @@
 
                 module.exports = Animation;
             },
-            "12": function(require, module, exports) {
+            "6": function(require, module, exports) {
                 var _head = document.head;
 
                 module.exports = {
