@@ -5,7 +5,7 @@ module.exports = {
 		'-webkit-animation': 'webkitAnimationEnd',
 		'-moz-animation': 'animationend',
 		'-o-animation': 'oAnimationEnd',
-		'-ms-animation': 'msAnimationEnd',
+		'-ms-animation': 'MSAnimationEnd',
 		'animation': 'animationend'
 	}),
 
