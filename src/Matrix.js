@@ -45,7 +45,7 @@ var Matrix = function Matrix(matrix) {
 
 Matrix.prototype = {
 	from: function(matrix) {
-		
+
 		this.x         = matrix.translation.x;
 		this.y         = matrix.translation.y;
 		this.z         = matrix.translation.z;
@@ -55,7 +55,7 @@ Matrix.prototype = {
 		this.rotationX = matrix.rotation.x / Math.PI * 180;
 		this.rotationY = matrix.rotation.y / Math.PI * 180;
 		this.rotationZ = matrix.rotation.z / Math.PI * 180;
-		
+
 	},
 
 	update: function() {

@@ -102,6 +102,7 @@ Obj.prototype = {
 	},
 
 	update: function(perc) {
+		
 		var property;
 		for (property in this._valuesEnd) {
 
@@ -264,7 +265,7 @@ Obj.prototype = {
 		}
 
 		return this;
-		
+
 	}
 
 };
