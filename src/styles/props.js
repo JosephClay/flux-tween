@@ -1,27 +1,24 @@
-var _tests = require('./test/tests');
+var _div = document.createElement('div'),
+
+	_testProps = function(arr) {
+		var idx = arr.length;
+		while (idx--) {
+			if (_div.style[arr[idx]] !== undefined) {
+				return arr[idx];
+			}
+		}
+
+		return '';
+	};
 
 module.exports = {
-	animationEvent: _tests.keyVal({
-		'-webkit-animation': 'webkitAnimationEnd',
-		'-moz-animation': 'animationend',
-		'-o-animation': 'oAnimationEnd',
-		'-ms-animation': 'MSAnimationEnd',
-		'animation': 'animationend'
-	}),
-
-	transform: _tests.prop([
+	transform: _testProps([
 		'transform',
 		'msTransform',
 		'oTransform',
 		'mozTransform',
 		'webkitTransform'
-	]),
-
-	transformOrigin: _tests.prop([
-		'transformOrigin',
-		'msTransformOrigin',
-		'oTransformOrigin',
-		'mozTransformOrigin',
-		'webkitTransformOrigin'
-	]),
+	])
 };
+
+_div = null;

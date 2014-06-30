@@ -1,8 +1,29 @@
-var WebMatrix = require('./polyfills/WebMatrix');
+var WebMatrix = window.WebKitCSSMatrix ? window.WebKitCSSMatrix : require('./polyfills/XCSSMatrix'),
 
-var _PI = Math.PI,
 	_emptyMatrix = new WebMatrix(),
-	_decompose = function(m) {
+
+	_EMPTY_MATRIX_DEFAULTS = {
+		x:         0,
+		y:         0,
+		z:         0,
+		scaleX:    0,
+		scaleY:    0,
+		scaleZ:    0,
+		rotationX: 0,
+		rotationY: 0,
+		rotationZ: 0
+	},
+
+	_decomposeObject = function(obj) {
+		obj = _.extend({}, _EMPTY_MATRIX_DEFAULTS, obj);
+		var matrix = _emptyMatrix;
+		matrix = matrix.translate(obj.x, obj.y, obj.z);
+		matrix = matrix.rotate(obj.rotationX, obj.rotationY, obj.rotationZ);
+		matrix = matrix.scale(obj.scaleX, obj.scaleY, obj.scaleZ);
+		return matrix;
+	},
+
+	_decomposeWebMatrix = function(m) {
 		var result = {};
 		result.translation = {
 			x: m.m41,
@@ -23,33 +44,38 @@ var _PI = Math.PI,
 	};
 
 var Matrix = function(matrix) {
-	if (matrix instanceof WebMatrix) { this.from(matrix); }
+	if (matrix instanceof WebMatrix) {
+		
+		// Webmatrix
+		this.from(_decomposeWebMatrix(matrix));
+
+	} else if (matrix) {
+
+		// Plain object
+		this.from(_decomposeWebMatrix(_decomposeObject(matrix)));
+	
+	}
 };
 
 Matrix.prototype = {
-
 	from: function(matrix) {
-		matrix = _decompose(matrix);
 		this.x = matrix.translation.x;
 		this.y = matrix.translation.y;
+		this.z = matrix.translation.z;
 		this.scaleX = matrix.scale.x;
 		this.scaleY = matrix.scale.y;
 		this.scaleZ = matrix.scale.z;
-		this.rotationX = matrix.rotation.x / _PI * 180;
-		this.rotationY = matrix.rotation.y / _PI * 180;
-		this.rotationZ = matrix.rotation.z / _PI * 180;
+		this.rotationX = matrix.rotation.x / Math.PI * 180;
+		this.rotationY = matrix.rotation.y / Math.PI * 180;
+		this.rotationZ = matrix.rotation.z / Math.PI * 180;
 	},
 
-	set: function(view) {
-		return (view._matrix = this);
-	},
-
-	css: function() {
+	update: function() {
 		var matrix = _emptyMatrix;
 		matrix = matrix.translate(this._x, this._y, this._z);
 		matrix = matrix.rotate(this._rotationX, this._rotationY, this._rotationZ);
 		matrix = matrix.scale(this._scaleX, this._scaleY, this._scaleZ);
-		return matrix.toString();
+		return matrix;
 	}
 };
 
@@ -62,7 +88,7 @@ Matrix.define('x', {
 		return this._x || 0;
 	},
 	set: function(value) {
-		return (this._x = value);
+		return (this._x = (value || 0));
 	}
 });
 
@@ -71,7 +97,7 @@ Matrix.define('y', {
 		return this._y || 0;
 	},
 	set: function(value) {
-		return (this._y = value);
+		return (this._y = (value || 0));
 	}
 });
 
@@ -80,7 +106,7 @@ Matrix.define('z', {
 		return this._z || 0;
 	},
 	set: function(value) {
-		return (this._z = value);
+		return (this._z = (value || 0));
 	}
 });
 
@@ -89,7 +115,7 @@ Matrix.define('scaleX', {
 		return this._scaleX || 1;
 	},
 	set: function(value) {
-		return (this._scaleX = value);
+		return (this._scaleX = (value || 0));
 	}
 });
 
@@ -98,7 +124,7 @@ Matrix.define('scaleY', {
 		return this._scaleY || 1;
 	},
 	set: function(value) {
-		return (this._scaleY = value);
+		return (this._scaleY = (value || 0));
 	}
 });
 
@@ -107,7 +133,7 @@ Matrix.define('scaleZ', {
 		return this._scaleZ || 1;
 	},
 	set: function(value) {
-		return (this._scaleZ = value);
+		return (this._scaleZ = (value || 0));
 	}
 });
 
@@ -116,7 +142,7 @@ Matrix.define('scale', {
 		return (this._scaleX + this._scaleY) / 2.0;
 	},
 	set: function(value) {
-		return (this._scaleX = this._scaleY = value);
+		return (this._scaleX = this._scaleY = (value || 0));
 	}
 });
 
@@ -125,7 +151,7 @@ Matrix.define('rotationX', {
 		return this._rotationX || 0;
 	},
 	set: function(value) {
-		return (this._rotationX = value);
+		return (this._rotationX = (value || 0));
 	}
 });
 
@@ -134,7 +160,7 @@ Matrix.define('rotationY', {
 		return (this._rotationY || 0);
 	},
 	set: function(value) {
-		return (this._rotationY = value);
+		return (this._rotationY = (value || 0));
 	}
 });
 
@@ -143,7 +169,7 @@ Matrix.define('rotationZ', {
 		return this._rotationZ || 0;
 	},
 	set: function(value) {
-		return (this._rotationZ = value);
+		return (this._rotationZ = (value || 0));
 	}
 });
 
@@ -152,7 +178,7 @@ Matrix.define('rotation', {
 		return this.rotationZ;
 	},
 	set: function(value) {
-		return (this.rotationZ = value);
+		return (this.rotationZ = (value || 0));
 	}
 });
 

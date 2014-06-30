@@ -1,0 +1,14 @@
+ ☐ stress test page
+ ☐ Pass to encapsulation: (Math as Math) (undefined) (window as window) (Object as Object)
+ ☐ minify "this"
+ ☐ clone()
+ ☐ destroy()
+ ☐ noConflict()
+ ☐ stop()
+ ☐ UDM
+ ☐ update build system
+ ☐ address function passing/handling for internals
+
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+Archive:
+ ✔ handle arraylikes @done (14-06-29 17:33)

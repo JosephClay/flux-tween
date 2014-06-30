@@ -2,11 +2,26 @@ module.exports = function(grunt) {
 
 	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-rquirejs');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
 	grunt.initConfig({
+        watch: {
+            scripts: {
+                files: ['**/*.js'],
+                tasks: ['browserify'],
+                options: {
+                    spawn: false
+                }
+            }
+        },
 		browserify: {
+            options: {
+                bundleOptions: {
+                    debug: true
+                }
+            },
             build: {
-                src: ['src/main.js'],
+                src: ['src/FLUX.js'],
                 dest: 'dist/Anim.js'
             }
         },
@@ -18,7 +33,7 @@ module.exports = function(grunt) {
                         'document': 'document'
                     },
                     safe_undefined: true,
-                    main: 'main.js',
+                    main: 'FLUX.js',
                     dest: 'dist/Anim.js',
                     micro_paths: true
                 }
@@ -26,6 +41,6 @@ module.exports = function(grunt) {
         }
 	});
 
-	//grunt.registerTask('default', ['browserify']);
-	grunt.registerTask('default', ['rquire']);
+	grunt.registerTask('default', ['browserify', 'watch']);
+    grunt.registerTask('rq', ['rquire']);
 };

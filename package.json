@@ -14,9 +14,10 @@
     "url": "https://github.com/JosephClay/AnimJS.git"
   },
   "devDependencies": {
+    "browserify": "^3.46.1",
     "grunt": "~0.4.1",
-    "grunt-rquirejs": "^0.1.2",
-    "browserify": "^3.46.0",
-    "grunt-browserify": "^2.0.8"
+    "grunt-browserify": "^2.0.8",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-rquirejs": "^0.1.2"
   }
 }
