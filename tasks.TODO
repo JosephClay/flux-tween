@@ -1,6 +1,6 @@
  ☐ stress test page
  ☐ minify "this"
- ☐ optimization
+ ☐ Using WebkitCSSMatrix is causing huge garbage collection and a lot of memory allocation - find better matrix solution to improve performance
 
 ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 Archive:
