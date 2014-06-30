@@ -118,7 +118,7 @@ Spring.prototype = {
 
 				this._onReverseCallback();
 				this._velocity = this._originalVelocity;
-				this._tension  = this._originalTension ;
+				this._tension  = this._originalTension;
 				this._friction = this._originalFriction;
 				this._value = 0;
 
@@ -135,6 +135,13 @@ Spring.prototype = {
 		this._velocity = finalVelocity;
 		this._onUpdateCallback(this._value / 100);
 		return (shouldStepAgain = true);
+	},
+
+	stop: function() {
+		this._velocity = this._originalVelocity;
+		this._tension  = this._originalTension;
+		this._friction = this._originalFriction;
+		this._value = 0;
 	},
 
 	onReverse: function(callback) {
