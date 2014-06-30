@@ -29,13 +29,15 @@ module.exports = function(grunt) {
             build: {
                 options: {
                     globals: {
-                        'window': 'window',
-                        'document': 'document'
+                        'window'  : 'window',
+                        'document': 'document',
+                        'Math'    : 'Math',
+                        'Object'  : 'Object'
                     },
+                    micro_paths: true,
                     safe_undefined: true,
                     main: 'FLUX.js',
-                    dest: 'dist/flux.js',
-                    micro_paths: true
+                    dest: 'dist/flux.js'
                 }
             }
         }

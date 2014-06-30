@@ -104,8 +104,9 @@ Animation.prototype = {
 		this._animation.stop();
 
 		this._onStopCallback();
-	},
+	}
 
+	// Implemented by the inheritor
 	// _start: function() {},
 };
 

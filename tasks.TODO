@@ -1,14 +1,12 @@
  ☐ stress test page
- ☐ Pass to encapsulation: (Math as Math) (undefined) (window as window) (Object as Object)
  ☐ minify "this"
- ☐ clone()
- ☐ destroy()
  ☐ UDM
  ☐ update build system
  ☐ address function passing/handling for internals
 
 ＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
 Archive:
+ ✔ Pass to encapsulation: (Math as Math) (undefined) (window as window) (Object as Object) @done (14-06-29 22:42)
  ✔ stop() @done (14-06-29 22:39)
  ✔ noConflict() @done (14-06-29 22:36)
  ✔ handle arraylikes @done (14-06-29 17:33)
