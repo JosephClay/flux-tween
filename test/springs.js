@@ -22,12 +22,11 @@
 				scale: 1.8,
 				x: 300,
 				y: 300,
-				opacity: 1,
 				rotationX: 180,
 				rotationY: 300
 			})
 			.delay(1000)
-			.repeat(2)
+			.repeat(1000)
 			.yoyo(true)
 			.onStart(function() {
 				console.log('start');

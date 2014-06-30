@@ -60,8 +60,6 @@ _.extend(FluxSpring.prototype, Animator.prototype, {
 			})
 			.onReverse(function() {
 				self._transformer.reverse();
-
-				self.start();
 			})
 			.onComplete(function() {
 				self._isPlaying = false;

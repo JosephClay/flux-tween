@@ -8,9 +8,11 @@ var _ = require('../utils'),
 		if (obj.scale !== undefined) {
 			obj.scaleX = obj.scale;
 			obj.scaleY = obj.scale;
+			delete obj.scale;
 		}
 		if (obj.rotation !== undefined) {
 			obj.rotationZ = to.rotation;
+			delete obj.rotation;
 		}
 		return obj;
 	};
@@ -29,13 +31,14 @@ var Obj = function(obj) {
 	// this._currentMatrixState = matrix;
 	// this._matrixStart        = {};
 	// this._matrixEnd          = {};
+	// this._matrixStartRepeat  = {};
 };
 
 Obj.prototype = {
 	// Used by Elem -----
 	setMatrixStart: function(obj) {
 		this._matrixStart = obj;
-		this._matrixStartRepeat = obj;
+		this._matrixStartRepeat = _.extend({}, obj);
 		return this;
 	},
 	hasMatrix: function() {
@@ -168,7 +171,6 @@ Obj.prototype = {
 			animatable = _matrixAnimatables[idx];
 			
 			if (this._valuesEnd[animatable] !== undefined) {
-
 				matrixEnd = (matrixEnd || {});
 
 				matrixEnd[animatable] = this._valuesEnd[animatable];
