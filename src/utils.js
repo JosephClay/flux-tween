@@ -2,6 +2,16 @@ var _toString = Object.prototype.toString;
 
 module.exports = {
 	noop: function() {},
+
+	indexOf: function(arr, value) {
+		var idx = arr.length;
+		while (idx--) {
+			if (arr[idx] === value) {
+				return idx;
+			}
+		}
+		return -1;
+	},
 	
 	isArrayLike: function(obj) {
 		return (!!obj && obj.length === +obj.length);

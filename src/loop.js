@@ -19,7 +19,7 @@ var loop = {
 
 	remove: function(fn) {
 
-		var idx = _animations.indexOf(fn);
+		var idx = _.indexOf(_animations, fn);
 		if (idx !== -1) {
 
 			_animations.splice(idx, 1);
@@ -37,32 +37,32 @@ var loop = {
 
 		var idx = 0;
 		while (idx < _waiting.length) {
-			
+
 			if (_waiting[idx](time)) {
-				
+
 				idx++;
-				
+
 			} else {
-				
+
 				_waiting.splice(idx, 1);
-				
+
 			}
-			
+
 		}
 
 		idx = 0;
 		while (idx < _animations.length) {
-			
+
 			if (_animations[idx].step(time)) {
-				
+
 				idx++;
-				
+
 			} else {
-				
+
 				_animations.splice(idx, 1);
-				
+
 			}
-		
+
 		}
 
 	}
