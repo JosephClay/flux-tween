@@ -5,10 +5,13 @@ var _ = require('../utils'),
 	_SPEED     = 1 / 60.0,
 
 	_calcSpringAcceleration = function(tension, x, friction, velocity) {
+
 		return -tension * x - friction * velocity;
+
 	},
 
 	_springCalculateState = function(state, speed) {
+
 		var dt = speed * 0.5,
 
 			a_dx = state.velocity,
@@ -33,9 +36,11 @@ var _ = require('../utils'),
 		state.velocity = a_dx + dvdt * speed;
 		
 		return state;
+
 	};
 
 var Spring = function Spring() {
+
 	this._repeat           = 0;
 	this._velocity         = 0;
 	this._originalVelocity = 0;
@@ -54,37 +59,50 @@ var Spring = function Spring() {
 	this._onUpdateCallback   = _.noop;
 	this._onCompleteCallback = _.noop;
 	this._onReverseCallback  = _.noop;
+
 };
 
 Spring.prototype = {
+
 	repeat: function(times) {
+
 		this._repeat = times;
 		return this;
+
 	},
 
 	set: function(tension, friction, velocity) {
+
 		if (velocity !== undefined) { this._velocity = this._originalVelocity = velocity; }
 		if (tension  !== undefined) { this._tension  = this._originalTension  = tension;  }
 		if (friction !== undefined) { this._friction = this._originalFriction = friction; }
 		return this;
+
 	},
 
 	tension: function(tension) {
+
 		this._tension = this._originalTension = tension;
 		return this;
+
 	},
 	
 	friction: function(friction) {
+
 		this._friction = this._originalFriction = friction;
 		return this;
+
 	},
 	
 	velocity: function(velocity) {
+
 		this._velocity = this._originalVelocity = velocity;
 		return this;
+
 	},
 
 	step: function() {
+
 		var shouldStepAgain,
 			stateBefore = this._state;
 
@@ -104,6 +122,7 @@ Spring.prototype = {
 		this._value = _END_VALUE + stateAfter.x;
 
 		if (shouldSpringStop) {
+
 			this._velocity = (finalVelocity = 0);
 			this._value = _END_VALUE;
 
@@ -130,35 +149,45 @@ Spring.prototype = {
 			this._onCompleteCallback();
 
 			return (shouldStepAgain = false);
+
 		}
 
 		this._velocity = finalVelocity;
 		this._onUpdateCallback(this._value / 100);
 		return (shouldStepAgain = true);
+
 	},
 
 	stop: function() {
+
 		this._velocity = this._originalVelocity;
 		this._tension  = this._originalTension;
 		this._friction = this._originalFriction;
 		this._value = 0;
+
 	},
 
 	onReverse: function(callback) {
+
 		this._onReverseCallback = callback;
 		return this;
+
 	},
 
 	onUpdate: function(onUpdate) {
+
 		var spring = this;
 		spring._onUpdateCallback = onUpdate;
 		return spring;
+
 	},
 
 	onComplete: function(onComplete) {
+		
 		var spring = this;
 		spring._onCompleteCallback = onComplete;
 		return spring;
+		
 	}
 };
 

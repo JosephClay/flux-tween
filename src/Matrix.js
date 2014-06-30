@@ -2,27 +2,6 @@ var WebMatrix = window.WebKitCSSMatrix ? window.WebKitCSSMatrix : require('./pol
 
 	_emptyMatrix = new WebMatrix(),
 
-	_EMPTY_MATRIX_DEFAULTS = {
-		x:         0,
-		y:         0,
-		z:         0,
-		scaleX:    0,
-		scaleY:    0,
-		scaleZ:    0,
-		rotationX: 0,
-		rotationY: 0,
-		rotationZ: 0
-	},
-
-	_decomposeObject = function(obj) {
-		obj = _.extend({}, _EMPTY_MATRIX_DEFAULTS, obj);
-		var matrix = _emptyMatrix;
-		matrix = matrix.translate(obj.x, obj.y, obj.z);
-		matrix = matrix.rotate(obj.rotationX, obj.rotationY, obj.rotationZ);
-		matrix = matrix.scale(obj.scaleX, obj.scaleY, obj.scaleZ);
-		return matrix;
-	},
-
 	_decomposeWebMatrix = function(m) {
 		var result = {};
 		result.translation = {
@@ -49,22 +28,17 @@ var Matrix = function Matrix(matrix) {
 		// Webmatrix
 		this.from(_decomposeWebMatrix(matrix));
 
-	} else if (matrix) {
-
-		// Plain object
-		this.from(_decomposeWebMatrix(_decomposeObject(matrix)));
-	
 	}
 };
 
 Matrix.prototype = {
 	from: function(matrix) {
-		this.x = matrix.translation.x;
-		this.y = matrix.translation.y;
-		this.z = matrix.translation.z;
-		this.scaleX = matrix.scale.x;
-		this.scaleY = matrix.scale.y;
-		this.scaleZ = matrix.scale.z;
+		this.x         = matrix.translation.x;
+		this.y         = matrix.translation.y;
+		this.z         = matrix.translation.z;
+		this.scaleX    = matrix.scale.x;
+		this.scaleY    = matrix.scale.y;
+		this.scaleZ    = matrix.scale.z;
 		this.rotationX = matrix.rotation.x / Math.PI * 180;
 		this.rotationY = matrix.rotation.y / Math.PI * 180;
 		this.rotationZ = matrix.rotation.z / Math.PI * 180;

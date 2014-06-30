@@ -9,25 +9,33 @@ var _ = require('../utils'),
 	TweenAnimation = require('../animations/Tween');
 
 var FluxTween = function Tween(obj) {
+
 	if (!(this instanceof FluxTween)) { return new FluxTween(obj); }
 
 	Animator.call(this, obj);
 
 	this._animation = new TweenAnimation();
+
 };
 
 _.extend(FluxTween.prototype, Animator.prototype, {
+
 	duration: function(duration) {
+
 		this._animation.duration(+duration);
 		return this;
+
 	},
 
 	ease: function(fn) {
+
 		this._animation.ease(fn || Easing.Linear.None);
 		return this;
+
 	},
 
 	_start: function() {
+
 		this._isPlaying = true;
 		
 		var self = this;
@@ -47,11 +55,13 @@ _.extend(FluxTween.prototype, Animator.prototype, {
 			.onReverse(function() {
 				self._transformer.reverse();
 			})
-			.startTime(_.now());
+			.startTime(_loop.now);
 
 		self._transformer.start();
 		_loop.add(self._animation);
+
 	}
+	
 });
 
 module.exports = FluxTween;

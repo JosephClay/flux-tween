@@ -7,20 +7,26 @@ var _ = require('../utils'),
 	SpringAnimation = require('../animations/Spring');
 
 var FluxSpring = function Spring(obj) {
+
 	if (!(this instanceof FluxSpring)) { return new FluxSpring(obj); }
 
 	Animator.call(this, obj);
 
 	this._animation = new SpringAnimation();
+
 };
 
 _.extend(FluxSpring.prototype, Animator.prototype, {
+
 	from: function(obj) {
+
 		this._transformer.from(obj);
 		return this;
+
 	},
 
 	set: function(tension, friction, velocity) {
+
 		// It's an object
 		if (!_.isNumber(tension)) {
 			var temp = tension;
@@ -31,24 +37,32 @@ _.extend(FluxSpring.prototype, Animator.prototype, {
 
 		this._animation.set(tension, friction, velocity);
 		return this;
+
 	},
 	
 	tension: function(tension) {
+
 		this._animation.tension(tension);
 		return this;
+
 	},
 
 	friction: function(friction) {
+
 		this._animation.friction(friction);
 		return this;
+
 	},
 
 	velocity: function(velocity) {
+
 		this._animation.velocity(velocity);
 		return this;
+
 	},
 
 	_start: function() {
+
 		this._isPlaying = true;
 
 		var self = this;
@@ -71,6 +85,7 @@ _.extend(FluxSpring.prototype, Animator.prototype, {
 
 		self._transformer.start();
 		_loop.add(self._animation);
+		
 	}
 });
 

@@ -1,16 +1,20 @@
-var prevFlux = window.FLUX;
+var previousFlux = window.FLUX,
 
-var FLUX = {
-	Tween: require('./animators/FluxTween'),
-	Spring: require('./animators/FluxSpring'),
-	
-	Easing: require('./Easing'),
-	update: require('./loop').update,
+	FLUX = {
+		Tween: require('./animators/FluxTween'),
+		Spring: require('./animators/FluxSpring'),
+		
+		Easing: require('./Easing'),
 
-	noConflict: function() {
-		window.FLUX = prevFlux;
-		return FLUX;
-	}
-};
+		update: require('./loop').update,
 
-module.exports = window.FLUX = FLUX;
+		noConflict: function() {
+
+			window.FLUX = previousFlux;
+			return FLUX;
+
+		}
+	};
+
+// TODO: Dont assign to window after going to rq build
+return (module.exports = window.FLUX = FLUX);
