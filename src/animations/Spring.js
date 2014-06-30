@@ -1,6 +1,4 @@
-var _ = require('../utils'),
-
-	_END_VALUE = 100,
+var _END_VALUE = 100,
 	_TOLERANCE = 0.1,
 	_SPEED     = 1 / 60.0,
 
@@ -56,13 +54,18 @@ var Spring = function Spring() {
 	// from _springCalculateState
 	this._state = {};
 
-	this._onUpdateCallback   = _.noop;
-	this._onCompleteCallback = _.noop;
-	this._onReverseCallback  = _.noop;
-
 };
 
 Spring.prototype = {
+
+	registerCallbacks: function(obj) {
+		
+		this._onUpdateCallback   = obj.onUpdate;
+		this._onCompleteCallback = obj.onComplete;
+		this._onReverseCallback  = obj.onReverse;
+		return this;
+
+	},
 
 	repeat: function(times) {
 
@@ -165,29 +168,6 @@ Spring.prototype = {
 		this._friction = this._originalFriction;
 		this._value = 0;
 
-	},
-
-	onReverse: function(callback) {
-
-		this._onReverseCallback = callback;
-		return this;
-
-	},
-
-	onUpdate: function(onUpdate) {
-
-		var spring = this;
-		spring._onUpdateCallback = onUpdate;
-		return spring;
-
-	},
-
-	onComplete: function(onComplete) {
-		
-		var spring = this;
-		spring._onCompleteCallback = onComplete;
-		return spring;
-		
 	}
 };
 

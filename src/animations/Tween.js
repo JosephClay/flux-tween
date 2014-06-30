@@ -9,16 +9,21 @@ var Tween = function Tween() {
 	this._startTime          = 0;
 	
 	this._easingFunction     = Easing.Linear.None;
-	
-	this._onUpdateCallback   = _.noop;
-	this._onCompleteCallback = _.noop;
-	this._onReverseCallback  = _.noop;
 
 	this.step = this.step.bind(this);
 
 };
 
 Tween.prototype = {
+
+	registerCallbacks: function(obj) {
+		
+		this._onUpdateCallback   = obj.onUpdate;
+		this._onCompleteCallback = obj.onComplete;
+		this._onReverseCallback  = obj.onReverse;
+		return this;
+
+	},
 
 	startTime: function(time) {
 
@@ -44,27 +49,6 @@ Tween.prototype = {
 	ease: function(easing) {
 
 		this._easingFunction = easing;
-		return this;
-
-	},
-
-	onUpdate: function(callback) {
-
-		this._onUpdateCallback = callback;
-		return this;
-
-	},
-
-	onComplete: function(callback) {
-
-		this._onCompleteCallback = callback;
-		return this;
-
-	},
-
-	onReverse: function(callback) {
-
-		this._onReverseCallback = callback;
 		return this;
 
 	},

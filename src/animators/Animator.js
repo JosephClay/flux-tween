@@ -107,12 +107,14 @@ Animation.prototype = {
 			var shouldContinueToWait;
 
 			if (time < (self._startTime + self._delayTime)) {
-				
+
 				return (shouldContinueToWait = true);
-				
+
 			}
 
 			self._onStartCallback();
+
+			self._isPlaying = true;
 
 			self._start(time);
 

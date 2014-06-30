@@ -63,29 +63,39 @@ _.extend(FluxSpring.prototype, Animator.prototype, {
 
 	_start: function() {
 
-		this._isPlaying = true;
-
 		var self = this;
 		this._animation
-			.onUpdate(function(perc) {
-				self._transformer.update(perc);
+			.registerCallbacks({
 
-				self._onUpdateCallback(self._transformer.value(), self._transformer.matrix());
-			})
-			.onReverse(function() {
-				self._transformer.reverse();
-			})
-			.onComplete(function() {
-				self._isPlaying = false;
+				onUpdate: function(perc) {
 
-				_loop.remove(self._animation);
+					self._transformer.update(perc);
 
-				self._onCompleteCallback();
+					self._onUpdateCallback(self._transformer.value(), self._transformer.matrix());
+
+				},
+
+				onReverse: function() {
+
+					self._transformer.reverse();
+
+				},
+
+				onComplete: function() {
+
+					self._isPlaying = false;
+
+					_loop.remove(self._animation);
+
+					self._onCompleteCallback();
+
+				}
+
 			});
 
 		self._transformer.start();
 		_loop.add(self._animation);
-		
+
 	}
 });
 

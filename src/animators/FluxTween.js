@@ -36,24 +36,33 @@ _.extend(FluxTween.prototype, Animator.prototype, {
 
 	_start: function() {
 
-		this._isPlaying = true;
-		
 		var self = this;
 		this._animation
-			.onUpdate(function(perc) {
-				self._transformer.update(perc);
+			.registerCallbacks({
 
-				self._onUpdateCallback(self._transformer.value(), self._transformer.matrix());
-			})
-			.onComplete(function() {
-				self._isPlaying = false;
+				onUpdate: function(perc) {
 
-				_loop.remove(self._animation);
+					self._transformer.update(perc);
 
-				self._onCompleteCallback();
-			})
-			.onReverse(function() {
-				self._transformer.reverse();
+					self._onUpdateCallback(self._transformer.value(), self._transformer.matrix());
+
+				},
+				onComplete: function() {
+
+					self._isPlaying = false;
+
+					_loop.remove(self._animation);
+
+					self._onCompleteCallback();
+
+				},
+
+				onReverse: function() {
+
+					self._transformer.reverse();
+
+				}
+				
 			})
 			.startTime(_loop.now);
 
@@ -61,7 +70,7 @@ _.extend(FluxTween.prototype, Animator.prototype, {
 		_loop.add(self._animation);
 
 	}
-	
+
 });
 
 module.exports = FluxTween;
