@@ -22,7 +22,7 @@ module.exports = function(grunt) {
             },
             build: {
                 src: ['src/FLUX.js'],
-                dest: 'dist/Anim.js'
+                dest: 'dist/flux.js'
             }
         },
         rquire: {
@@ -34,7 +34,7 @@ module.exports = function(grunt) {
                     },
                     safe_undefined: true,
                     main: 'FLUX.js',
-                    dest: 'dist/Anim.js',
+                    dest: 'dist/flux.js',
                     micro_paths: true
                 }
             }
