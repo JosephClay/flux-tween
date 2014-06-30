@@ -1,6 +1,6 @@
 var _div = document.createElement('div'),
 
-	_testProps = function(arr) {
+	_selectProp = function(arr) {
 		var idx = arr.length;
 		while (idx--) {
 			if (_div.style[arr[idx]] !== undefined) {
@@ -12,7 +12,7 @@ var _div = document.createElement('div'),
 	};
 
 module.exports = {
-	transform: _testProps([
+	transform: _selectProp([
 		'transform',
 		'msTransform',
 		'oTransform',
