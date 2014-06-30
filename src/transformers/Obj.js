@@ -33,8 +33,9 @@ var Obj = function(obj) {
 
 Obj.prototype = {
 	// Used by Elem -----
-	setMatrixStart: function(matrix) {
-		this._matrixStart = matrix;
+	setMatrixStart: function(obj) {
+		this._matrixStart = obj;
+		this._matrixStartRepeat = obj;
 		return this;
 	},
 	hasMatrix: function() {

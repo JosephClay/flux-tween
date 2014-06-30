@@ -1,5 +1,7 @@
  ☐ stress test page
+ ☐ fix issue with Spring yoyoing
  ☐ minify "this"
+ ☐ name main classes
  ☐ UDM
  ☐ update build system
  ☐ address function passing/handling for internals

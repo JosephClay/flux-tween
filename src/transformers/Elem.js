@@ -87,10 +87,10 @@ Elem.prototype = {
 		var objectMatrix = this._obj.hasMatrix();
 		if (objectMatrix) {
 			this._obj.setMatrixStart(
-				new Matrix(
+				(new Matrix(
 					// reuse the computed matrix if we can
 					_getComputedMatrix(computedStyles || _getComputedStyle(this._elem))
-				)
+				)).toObject()
 			);
 		}
 	}

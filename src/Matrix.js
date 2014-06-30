@@ -76,6 +76,20 @@ Matrix.prototype = {
 		matrix = matrix.rotate(this._rotationX, this._rotationY, this._rotationZ);
 		matrix = matrix.scale(this._scaleX, this._scaleY, this._scaleZ);
 		return matrix;
+	},
+
+	toObject: function() {
+		return {
+			x:         this.x,
+			y:         this.y,
+			z:         this.z,
+			scaleX:    this.scaleX,
+			scaleY:    this.scaleY,
+			scaleZ:    this.scaleZ,
+			rotationX: this.rotationX,
+			rotationY: this.rotationY,
+			rotationZ: this.rotationZ
+		};
 	}
 };
 
