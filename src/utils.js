@@ -29,10 +29,6 @@ module.exports = {
 		return _toString.call(obj) === '[object Number]';
 	},
 
-	exists: function(obj) {
-		return (obj !== null && obj !== undefined);
-	},
-
 	map: function(arr, iterator) {
 		var result = [],
 			idx = 0, length = arr.length;
@@ -74,11 +70,5 @@ module.exports = {
 		}
 
 		return obj;
-	},
-
-	now: (window.performance !== undefined && window.performance.now !== undefined) ?
-		// Wrap in function to avoid illegal reference errors
-		function() { return window.performance.now(); } :
-		// Fallback to now
-		Date.now ? Date.now : function() { return new Date().getTime(); }
+	}
 };

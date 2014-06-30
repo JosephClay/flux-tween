@@ -35,51 +35,56 @@ var WebMatrix = window.WebKitCSSMatrix ? window.WebKitCSSMatrix : require('./pol
 	};
 
 var Matrix = function Matrix(matrix) {
+	
 	if (matrix instanceof WebMatrix) {
 		
 		// Webmatrix
 		this.from(_decomposeWebMatrix(matrix));
 
 	}
+	
 };
 
 Matrix.prototype = {
-	from: function(matrix) {
+	from: function(fromMatrix) {
 
-		this.x         = matrix.translation.x;
-		this.y         = matrix.translation.y;
-		this.z         = matrix.translation.z;
-		this.scaleX    = matrix.scale.x;
-		this.scaleY    = matrix.scale.y;
-		this.scaleZ    = matrix.scale.z;
-		this.rotationX = matrix.rotation.x / Math.PI * 180;
-		this.rotationY = matrix.rotation.y / Math.PI * 180;
-		this.rotationZ = matrix.rotation.z / Math.PI * 180;
+		var matrix = this;
+		matrix.x         = fromMatrix.translation.x;
+		matrix.y         = fromMatrix.translation.y;
+		matrix.z         = fromMatrix.translation.z;
+		matrix.scaleX    = fromMatrix.scale.x;
+		matrix.scaleY    = fromMatrix.scale.y;
+		matrix.scaleZ    = fromMatrix.scale.z;
+		matrix.rotationX = fromMatrix.rotation.x / Math.PI * 180;
+		matrix.rotationY = fromMatrix.rotation.y / Math.PI * 180;
+		matrix.rotationZ = fromMatrix.rotation.z / Math.PI * 180;
 
 	},
 
 	update: function() {
 
-		var matrix = _emptyMatrix;
-		matrix = matrix.translate(this._x, this._y, this._z);
-		matrix = matrix.rotate(this._rotationX, this._rotationY, this._rotationZ);
-		matrix = matrix.scale(this._scaleX, this._scaleY, this._scaleZ);
-		return matrix;
+		var matrix = this,
+			newMatrix = _emptyMatrix;
+		newMatrix = newMatrix.translate(matrix._x, matrix._y, matrix._z);
+		newMatrix = newMatrix.rotate(matrix._rotationX, matrix._rotationY, matrix._rotationZ);
+		newMatrix = newMatrix.scale(matrix._scaleX, matrix._scaleY, matrix._scaleZ);
+		return newMatrix;
 
 	},
 
 	toObject: function() {
 
+		var matrix = this;
 		return {
-			x:         this.x,
-			y:         this.y,
-			z:         this.z,
-			scaleX:    this.scaleX,
-			scaleY:    this.scaleY,
-			scaleZ:    this.scaleZ,
-			rotationX: this.rotationX,
-			rotationY: this.rotationY,
-			rotationZ: this.rotationZ
+			x:         matrix.x,
+			y:         matrix.y,
+			z:         matrix.z,
+			scaleX:    matrix.scaleX,
+			scaleY:    matrix.scaleY,
+			scaleZ:    matrix.scaleZ,
+			rotationX: matrix.rotationX,
+			rotationY: matrix.rotationY,
+			rotationZ: matrix.rotationZ
 		};
 
 	}

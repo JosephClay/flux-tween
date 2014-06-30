@@ -27,20 +27,22 @@ var _ = require('../utils'),
 
 var Obj = function(obj) {
 
-	this._object = obj ? _expandShorthand(obj) : {};
+	var object = this;
+	object._object = obj ? _expandShorthand(obj) : {};
 
-	this._valuesStart       = {};
-	this._valuesEnd         = {};
-	this._valuesStartRepeat = {};
-	this._yoyo              = false;
+	object._valuesStart       = {};
+	object._valuesEnd         = {};
+	object._valuesStartRepeat = {};
+	object._yoyo              = false;
 
 	// Matrix stuffs are only created if
 	// there are matrix transformations	
-	// this._matrix             = new Matrix();
-	// this._currentMatrixState = matrix;
-	// this._matrixStart        = {};
-	// this._matrixEnd          = {};
-	// this._matrixStartRepeat  = {};
+	// object._matrix             = new Matrix();
+	// object._currentMatrixState = matrix;
+	// object._matrixStart        = {};
+	// object._matrixEnd          = {};
+	// object._matrixStartRepeat  = {};
+	
 };
 
 Obj.prototype = {
@@ -48,9 +50,10 @@ Obj.prototype = {
 	
 	setMatrixStart: function(obj) {
 
-		this._matrixStart = obj;
-		this._matrixStartRepeat = obj;
-		return this;
+		var object = this;
+		object._matrixStart = obj;
+		object._matrixStartRepeat = obj;
+		return object;
 
 	},
 
@@ -76,8 +79,9 @@ Obj.prototype = {
 
 	from: function(obj) {
 
-		this._object = _expandShorthand(obj);
-		return this;
+		var object = this;
+		object._object = _expandShorthand(obj);
+		return object;
 
 	},
 
@@ -89,15 +93,17 @@ Obj.prototype = {
 
 	to: function(obj) {
 
-		this._valuesEnd = _expandShorthand(obj);
-		return this;
+		var object = this;
+		object._valuesEnd = _expandShorthand(obj);
+		return object;
 
 	},
 
 	yoyo: function(yoyo) {
 
-		this._yoyo = yoyo;
-		return this;
+		var object = this;
+		object._yoyo = yoyo;
+		return object;
 
 	},
 

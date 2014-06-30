@@ -4,13 +4,14 @@ var _ = require('../utils'),
 
 var Tween = function Tween() {
 
-	this._duration           = 1000;
-	this._repeat             = 0;
-	this._startTime          = 0;
+	var tween = this;
+	tween._duration           = 1000;
+	tween._repeat             = 0;
+	tween._startTime          = 0;
 	
-	this._easingFunction     = Easing.Linear.None;
+	tween._easingFunction     = Easing.Linear.None;
 
-	this.step = this.step.bind(this);
+	tween.step = tween.step.bind(tween);
 
 };
 
@@ -18,68 +19,74 @@ Tween.prototype = {
 
 	registerCallbacks: function(obj) {
 		
-		this._onUpdateCallback   = obj.onUpdate;
-		this._onCompleteCallback = obj.onComplete;
-		this._onReverseCallback  = obj.onReverse;
-		return this;
+		var tween = this;
+		tween._onUpdateCallback   = obj.onUpdate;
+		tween._onCompleteCallback = obj.onComplete;
+		tween._onReverseCallback  = obj.onReverse;
+		return tween;
 
 	},
 
 	startTime: function(time) {
 
-		this._startTime = time;
-		return this;
+		var tween = this;
+		tween._startTime = time;
+		return tween;
 
 	},
 
 	duration: function(duration) {
 
-		this._duration = duration;
-		return this;
+		var tween = this;
+		tween._duration = duration;
+		return tween;
 
 	},
 
 	repeat: function(times) {
 
-		this._repeat = times;
-		return this;
+		var tween = this;
+		tween._repeat = times;
+		return tween;
 
 	},
 
 	ease: function(easing) {
 
-		this._easingFunction = easing;
-		return this;
+		var tween = this;
+		tween._easingFunction = easing;
+		return tween;
 
 	},
 
 	step: function(time) {
 
-		var shouldStepAgain,
-			elapsedUncapped = (time - this._startTime) / this._duration,
+		var tween = this,
+			shouldStepAgain,
+			elapsedUncapped = (time - tween._startTime) / tween._duration,
 			elapsed = elapsedUncapped > 1 ? 1 : elapsedUncapped;
 			
-		this._onUpdateCallback(this._easingFunction(elapsed));
+		tween._onUpdateCallback(tween._easingFunction(elapsed));
 
-		// We have ellapsed this loop
+		// We have ellapsed tween loop
 		if (elapsed === 1) {
 
 			// Should we repeat?
-			if (this._repeat > 0) {
+			if (tween._repeat > 0) {
 
 				// Decrement the repeat counter (if finite, 
 				// we may be in an infinite loop)
-				if (isFinite(this._repeat)) { this._repeat--; }
+				if (isFinite(tween._repeat)) { tween._repeat--; }
 
-				this._onReverseCallback();
-				this._startTime = time;
+				tween._onReverseCallback();
+				tween._startTime = time;
 
 				return (shouldStepAgain = true);
 
 			}
 
 			// Otherwise, we're done repeating
-			this._onCompleteCallback();
+			tween._onCompleteCallback();
 
 			return (shouldStepAgain = false);
 
