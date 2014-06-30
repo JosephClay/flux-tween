@@ -1,6 +1,7 @@
 var previousFlux = window.FLUX,
 
 	FLUX = {
+		
 		Tween: require('./animators/FluxTween'),
 		Spring: require('./animators/FluxSpring'),
 		
