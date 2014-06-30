@@ -35,7 +35,7 @@ var _ = require('../utils'),
 		return state;
 	};
 
-var Spring = function() {
+var Spring = function Spring() {
 	this._repeat           = 0;
 	this._velocity         = 0;
 	this._originalVelocity = 0;

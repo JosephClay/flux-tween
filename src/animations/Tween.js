@@ -2,7 +2,7 @@ var _ = require('../utils'),
 
 	Easing = require('../Easing');
 
-var Tween = function() {
+var Tween = function Tween() {
 	this._duration              = 1000;
 	this._repeat                = 0;
 	this._startTime             = 0;

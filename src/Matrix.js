@@ -43,7 +43,7 @@ var WebMatrix = window.WebKitCSSMatrix ? window.WebKitCSSMatrix : require('./pol
 		return result;
 	};
 
-var Matrix = function(matrix) {
+var Matrix = function Matrix(matrix) {
 	if (matrix instanceof WebMatrix) {
 		
 		// Webmatrix
