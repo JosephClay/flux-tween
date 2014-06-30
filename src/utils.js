@@ -56,7 +56,8 @@ module.exports = {
 		for (; idx < length; idx++) {
 			var source = args[idx];
 			if (source) {
-				for (var prop in source) {
+				var prop;
+				for (prop in source) {
 					obj[prop] = source[prop];
 				}
 			}
