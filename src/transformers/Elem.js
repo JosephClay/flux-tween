@@ -28,9 +28,15 @@ var Elem = function(elem) {
 };
 
 Elem.prototype = {
+	element: function() {
+		
+		return this._elem;
+
+	},
+
 	value: function() {
 
-		return this._elem;
+		return this._obj.value();
 
 	},
 
@@ -70,7 +76,7 @@ Elem.prototype = {
 
 	applyMatrix: function(matrix) {
 
-		if (!matrix) { return; }
+		matrix = matrix || this._obj.matrix();
 		this._elem.style[_props.transform] = matrix.toString();
 
 	},
@@ -117,6 +123,8 @@ Elem.prototype = {
 				// reuse the computed matrix if we can
 				_getComputedMatrix(computedStyles || _getComputedStyle(this._elem))
 			);
+
+			matrix.transpose(this._obj.getMatrixStart());
 
 			this._obj.setMatrixStart(matrix.toObject());
 

@@ -1,5 +1,5 @@
 var _END_VALUE = 100,
-	_TOLERANCE = 0.1,
+	_TOLERANCE = 0.001,
 	_SPEED     = 1 / 60.0,
 
 	_calcSpringAcceleration = function(tension, x, friction, velocity) {

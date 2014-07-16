@@ -71,7 +71,7 @@ _.extend(FluxSpring.prototype, Animator.prototype, {
 
 					self._transformer.update(perc);
 
-					self._onUpdateCallback(self._transformer.value(), self._transformer.matrix());
+					self._onUpdateCallback(self._transformer.value());
 
 				},
 

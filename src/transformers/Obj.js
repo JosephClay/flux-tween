@@ -4,6 +4,18 @@ var _ = require('../utils'),
 	
 	Matrix = require('../Matrix'),
 
+	_MATRIX_END = {
+		x: 0,
+		y: 0,
+		z: 0,
+		scaleX: 1,
+		scaleY: 1,
+		scaleZ: 1,
+		rotationX: 0,
+		rotationY: 0,
+		rotationZ: 0
+	},
+
 	_expandShorthand = function(obj) {
 
 		if (obj.scale !== undefined) {
@@ -16,8 +28,15 @@ var _ = require('../utils'),
 
 		if (obj.rotation !== undefined) {
 
-			obj.rotationZ = to.rotation;
+			obj.rotationZ = obj.rotation;
 			delete obj.rotation;
+
+		}
+
+		if (obj.rotate !== undefined) {
+
+			obj.rotationZ = obj.rotate;
+			delete obj.rotate;
 
 		}
 
@@ -54,6 +73,12 @@ Obj.prototype = {
 		object._matrixStart = obj;
 		object._matrixStartRepeat = obj;
 		return object;
+
+	},
+
+	getMatrixStart: function() {
+
+		return this._matrixStart;
 
 	},
 
@@ -204,7 +229,6 @@ Obj.prototype = {
 	},
 
 	start: function() {
-
 		var property;
 
 		for (property in this._valuesEnd) {
@@ -227,6 +251,7 @@ Obj.prototype = {
 
 		// translate matrix values over to _matrixStart
 		var matrixEnd,
+			matrixStart,
 			idx = _matrixAnimatables.length,
 			animatable;
 
@@ -236,7 +261,17 @@ Obj.prototype = {
 			
 			if (this._valuesEnd[animatable] !== undefined) {
 
-				matrixEnd = (matrixEnd || {});
+				matrixEnd = (matrixEnd || {
+					x: 0,
+					y: 0,
+					z: 0,
+					scaleX: 1,
+					scaleY: 1,
+					scaleZ: 1,
+					rotationX: 0,
+					rotationY: 0,
+					rotationZ: 0
+				});
 
 				matrixEnd[animatable] = this._valuesEnd[animatable];
 
@@ -244,6 +279,25 @@ Obj.prototype = {
 				// perform calculations on them
 				delete this._valuesEnd[animatable];
 
+			}
+
+			if (this._object[animatable] !== undefined) {
+
+				matrixStart = (matrixStart || {
+					x: 0,
+					y: 0,
+					z: 0,
+					scaleX: 1,
+					scaleY: 1,
+					scaleZ: 1,
+					rotationX: 0,
+					rotationY: 0,
+					rotationZ: 0
+				});
+
+				matrixStart[animatable] = this._object[animatable];
+
+				delete this._object[animatable];
 			}
 
 		}
@@ -255,7 +309,7 @@ Obj.prototype = {
 
 			this._matrixEnd = matrixEnd;
 
-			this._matrixStart = this._matrixStart || {};
+			this._matrixStart = matrixStart || this._matrixStart || {};
 			this._matrixStartRepeat = {};
 
 			for (property in this._matrixEnd) {

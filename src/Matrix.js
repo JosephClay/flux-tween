@@ -20,7 +20,7 @@ var WebMatrix = window.WebKitCSSMatrix ? window.WebKitCSSMatrix : require('./pol
 			y: Math.sqrt(m.m21 * m.m21 + m.m22 * m.m22 + m.m23 * m.m23),
 			z: Math.sqrt(m.m31 * m.m31 + m.m32 * m.m32 + m.m33 * m.m33)
 
-		};
+		};7
 
 		result.rotation = {
 
@@ -46,6 +46,15 @@ var Matrix = function Matrix(matrix) {
 };
 
 Matrix.prototype = {
+	transpose: function(obj) {
+		if (!obj) { return; }
+
+		for (var property in obj) {
+			this[property] = obj[property];
+		}
+
+	},
+
 	from: function(fromMatrix) {
 
 		var matrix = this;
@@ -74,18 +83,19 @@ Matrix.prototype = {
 
 	toObject: function() {
 
-		var matrix = this;
-		return {
-			x:         matrix.x,
-			y:         matrix.y,
-			z:         matrix.z,
-			scaleX:    matrix.scaleX,
-			scaleY:    matrix.scaleY,
-			scaleZ:    matrix.scaleZ,
-			rotationX: matrix.rotationX,
-			rotationY: matrix.rotationY,
-			rotationZ: matrix.rotationZ
-		};
+		var matrix = this,
+			m = this._m || (this._m = {});
+		m.x         = matrix.x;
+		m.y         = matrix.y;
+		m.z         = matrix.z;
+		m.scaleX    = matrix.scaleX;
+		m.scaleY    = matrix.scaleY;
+		m.scaleZ    = matrix.scaleZ;
+		m.rotationX = matrix.rotationX;
+		m.rotationY = matrix.rotationY;
+		m.rotationZ = matrix.rotationZ;
+
+		return m;
 
 	}
 };

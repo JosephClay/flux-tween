@@ -84,7 +84,7 @@ Animation.prototype = {
 	},
 
 	yoyo: function(yoyo) {
-
+		if (!arguments.length) { yoyo = true; }
 		this._transformer.yoyo(yoyo);
 		return this;
 
