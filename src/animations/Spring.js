@@ -1,5 +1,5 @@
 var _END_VALUE = 100,
-	_TOLERANCE = 0.001,
+	_TOLERANCE = 0.01,
 	_SPEED     = 1 / 60.0,
 
 	_calcSpringAcceleration = function(tension, x, friction, velocity) {
@@ -128,7 +128,7 @@ Spring.prototype = {
 			net1DVelocity    = stateAfter.velocity,
 			netValueIsLow    = Math.abs(netFloat) < _TOLERANCE,
 			netVelocityIsLow = Math.abs(net1DVelocity) < _TOLERANCE,
-			shouldSpringStop = netValueIsLow && netVelocityIsLow;
+			shouldSpringStop = netValueIsLow || netVelocityIsLow;
 
 		spring._value = _END_VALUE + stateAfter.x;
 
