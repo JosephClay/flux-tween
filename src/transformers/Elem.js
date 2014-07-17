@@ -83,6 +83,7 @@ Elem.prototype = {
 	applyMatrix: function(matrix) {
 
 		matrix = matrix || this._obj.matrix();
+		if (!matrix) { return; }
 		this._elem.style[_props.transform] = matrix.toString();
 
 	},
