@@ -277,7 +277,7 @@ Obj.prototype = {
 
 				// remove from _valuesStart and _valuesEnd so that we don't
 				// perform calculations on them
-				delete this._valuesEnd[animatable];
+				// delete this._valuesEnd[animatable];
 
 			}
 
@@ -297,7 +297,7 @@ Obj.prototype = {
 
 				matrixStart[animatable] = this._object[animatable];
 
-				delete this._object[animatable];
+				// delete this._object[animatable];
 			}
 
 		}

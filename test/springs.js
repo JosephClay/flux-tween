@@ -15,255 +15,215 @@
 		tension: 80,
 		friction: 15,
 		velocity: 1000
-	};
+	};[0]
 
-	FLUX.Spring($('[data-x]'))
+	FLUX.Spring($('[data-x]')[0])
 		.set(_SPRING)
 		.to({ x: 50 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
 		.start();
-		
-	FLUX.Spring($('[data-y]'))
+	[0]	
+	FLUX.Spring($('[data-y]')[0])
 		.set(_SPRING)
 		.to({ y: -50 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
-		.start();
+		.start();[0]
 
-	FLUX.Spring($('[data-z]'))
+	FLUX.Spring($('[data-z]')[0])
 		.set(_SPRING)
 		.to({ z: -50 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
-		.start();
+		.start();[0]
 
-	FLUX.Spring($('[data-scale-y]'))
+	FLUX.Spring($('[data-scale-y]')[0])
 		.set(_SPRING)
 		.to({ scaleY: 1.8 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
-		.start();
+		.start();[0]
 
-	FLUX.Spring($('[data-scale-x]'))
+	FLUX.Spring($('[data-scale-x]')[0])
 		.set(_SPRING)
 		.to({ scaleX: 1.8 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
-		.start();
+		.start();[0]
 
-	FLUX.Spring($('[data-scale-z]'))
+	FLUX.Spring($('[data-scale-z]')[0])
 		.set(_SPRING)
 		.to({ scaleZ: 1.8 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
-		.start();
+		.start();[0]
 
-	FLUX.Spring($('[data-scale]'))
+	FLUX.Spring($('[data-scale]')[0])
 		.set(_SPRING)
 		.to({ scale: 1.8 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
-		.start();
+		.start();[0]
 
-	FLUX.Spring($('[data-rotate-x]'))
+	FLUX.Spring($('[data-rotate-x]')[0])
 		.set(_SPRING)
 		.to({ rotationX: 90 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
-		.start();
+		.start();[0]
 
-	FLUX.Spring($('[data-rotate-y]'))
+	FLUX.Spring($('[data-rotate-y]')[0])
 		.set(_SPRING)
 		.to({ rotationY: 90 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
-		.start();
+		.start();[0]
 
-	FLUX.Spring($('[data-rotate-z]'))
+	FLUX.Spring($('[data-rotate-z]')[0])
 		.set(_SPRING)
 		.to({ rotationZ: 90 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
 		.start();
 
-	FLUX.Spring($('[data-opacity]'))
+	FLUX.Spring($('[data-opacity]')[0])
 		.set(_SPRING)
 		.from({ opacity: 0 })
 		.to({ opacity: 1 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				$(elem.element()).css(elem.value());
-			});
+		.onUpdate(function(elem) {
+			$(elem.element()).css(elem.val());
 		})
 		.start();
 
-	FLUX.Spring($('[data-x-from]'))
+	FLUX.Spring($('[data-x-from]')[0])
 		.set(_SPRING)
 		.from({ x: -50 })
 		.to({ x: 50 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
 		.start();
 
-	FLUX.Spring($('[data-y-from]'))
+	FLUX.Spring($('[data-y-from]')[0])
 		.set(_SPRING)
 		.from({ y: 50 })
 		.to({ y: -50 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
 		.start();
 
-	FLUX.Spring($('[data-z-from]'))
+	FLUX.Spring($('[data-z-from]')[0])
 		.set(_SPRING)
 		.from({ z: 50 })
 		.to({ z: -50 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
 		.start();
 
-	FLUX.Spring($('[data-scale-y-from]'))
+	FLUX.Spring($('[data-scale-y-from]')[0])
 		.set(_SPRING)
 		.from({ scaleY: 0.5 })
 		.to({ scaleY: 1.8 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
 		.start();
 
-	FLUX.Spring($('[data-scale-x-from]'))
+	FLUX.Spring($('[data-scale-x-from]')[0])
 		.set(_SPRING)
 		.from({ scaleX: 0.5 })
 		.to({ scaleX: 1.8 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
 		.start();
 
-	FLUX.Spring($('[data-scale-z-from]'))
+	FLUX.Spring($('[data-scale-z-from]')[0])
 		.set(_SPRING)
 		.from({ scaleZ: 0.5 })
 		.to({ scaleZ: 1.8 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
 		.start();
 
-	FLUX.Spring($('[data-rotate-x-from]'))
+	FLUX.Spring($('[data-rotate-x-from]')[0])
 		.set(_SPRING)
 		.from({ rotationX: -45 })
 		.to({ rotationX: 90 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
 		.start();
 
-	FLUX.Spring($('[data-rotate-y-from]'))
+	FLUX.Spring($('[data-rotate-y-from]')[0])
 		.set(_SPRING)
 		.from({ rotationY: -45 })
 		.to({ rotationY: 90 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
 		.start();
 
-	FLUX.Spring($('[data-rotate-z-from]'))
+	FLUX.Spring($('[data-rotate-z-from]')[0])
 		.set(_SPRING)
 		.from({ rotationZ: -45 })
 		.to({ rotationZ: 90 })
 		.repeat(Infinity)
 		.yoyo()
-		.onUpdate(function(arr) {
-			arr.each(function(elem) {
-				elem.applyMatrix();
-			});
+		.onUpdate(function(elem) {
+			elem.applyMatrix();
 		})
 		.start();
 

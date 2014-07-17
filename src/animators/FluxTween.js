@@ -20,6 +20,13 @@ var FluxTween = function Tween(obj) {
 
 _.extend(FluxTween.prototype, Animator.prototype, {
 
+	from: function(obj) {
+		
+		this._transformer.from(obj);
+		return this;
+		
+	},
+
 	duration: function(duration) {
 
 		this._animation.duration(+duration);

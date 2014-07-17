@@ -27,20 +27,20 @@ var createGraph = function(t, f, c) {
 	context.lineWidth = 2;
 	context.strokeStyle = 'rgb(255,127,127)';
 
-	var position = { x: 5, y: 80 };
-	var position_old = { x: 5, y: 80 };
+	var position = { _x: 5, _y: 80 };
+	var position_old = { _x: 5, _y: 80 };
 
-	new FLUX.Tween(position).to({ x: 175 }).duration(2000).ease(FLUX.Easing.Linear.None).start();
-	new FLUX.Tween(position).to({ y: 20 }).duration(2000).ease(f).onUpdate(function() {
+	new FLUX.Tween(position).to({ _x: 175 }).duration(2000).ease(FLUX.Easing.Linear.None).start();
+	new FLUX.Tween(position).to({ _y: 20 }).duration(2000).ease(f).onUpdate(function() {
 
 		context.beginPath();
-		context.moveTo(position_old.x, position_old.y);
-		context.lineTo(position.x, position.y);
+		context.moveTo(position_old._x, position_old._y);
+		context.lineTo(position._x, position._y);
 		context.closePath();
 		context.stroke();
 
-		position_old.x = position.x;
-		position_old.y = position.y;
+		position_old._x = position._x;
+		position_old._y = position._y;
 
 	}).start();
 

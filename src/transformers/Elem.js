@@ -36,6 +36,12 @@ Elem.prototype = {
 
 	value: function() {
 
+		return this;
+
+	},
+
+	val: function() {
+
 		return this._obj.value();
 
 	},
