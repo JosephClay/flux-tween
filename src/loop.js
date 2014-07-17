@@ -57,15 +57,8 @@ var loop = {
 		idx = 0;
 		while (idx < _animations.length) {
 
-			if (_animations[idx].step(time)) {
-
-				idx++;
-
-			} else {
-
-				_animations.splice(idx, 1);
-
-			}
+			_animations[idx].step(time);
+			idx++;
 
 		}
 
