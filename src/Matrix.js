@@ -77,6 +77,7 @@ Matrix.prototype = {
 		newMatrix = newMatrix.translate(matrix._x, matrix._y, matrix._z);
 		newMatrix = newMatrix.rotate(matrix._rotationX, matrix._rotationY, matrix._rotationZ);
 		newMatrix = newMatrix.scale(matrix._scaleX, matrix._scaleY, matrix._scaleZ);
+
 		return newMatrix;
 
 	},
@@ -112,7 +113,7 @@ Matrix.define = function(definition) {
 };
 
 Matrix.define({
-	'x': {
+	x: {
 		get: function() {
 			return this._x || 0;
 		},
@@ -121,7 +122,7 @@ Matrix.define({
 		}
 	},
 
-	'y': {
+	y: {
 		get: function() {
 			return this._y || 0;
 		},
@@ -130,7 +131,7 @@ Matrix.define({
 		}
 	},
 
-	'z': {
+	z: {
 		get: function() {
 			return this._z || 0;
 		},
@@ -139,7 +140,7 @@ Matrix.define({
 		}
 	},
 
-	'scaleX': {
+	scaleX: {
 		get: function() {
 			return this._scaleX || 1;
 		},
@@ -148,7 +149,7 @@ Matrix.define({
 		}
 	},
 
-	'scaleY': {
+	scaleY: {
 		get: function() {
 			return this._scaleY || 1;
 		},
@@ -157,7 +158,7 @@ Matrix.define({
 		}
 	},
 
-	'scaleZ': {
+	scaleZ: {
 		get: function() {
 			return this._scaleZ || 1;
 		},
@@ -166,7 +167,7 @@ Matrix.define({
 		}
 	},
 
-	'scale': {
+	scale: {
 		get: function() {
 			return (this._scaleX + this._scaleY) / 2.0;
 		},
@@ -175,7 +176,7 @@ Matrix.define({
 		}
 	},
 
-	'rotationX': {
+	rotationX: {
 		get: function() {
 			return this._rotationX || 0;
 		},
@@ -184,7 +185,7 @@ Matrix.define({
 		}
 	},
 
-	'rotationY': {
+	rotationY: {
 		get: function() {
 			return (this._rotationY || 0);
 		},
@@ -193,7 +194,7 @@ Matrix.define({
 		}
 	},
 
-	'rotationZ': {
+	rotationZ: {
 		get: function() {
 			return this._rotationZ || 0;
 		},
@@ -202,7 +203,7 @@ Matrix.define({
 		}
 	},
 
-	'rotation': {
+	rotation: {
 		get: function() {
 			return this.rotationZ;
 		},
