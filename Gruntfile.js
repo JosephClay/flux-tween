@@ -21,8 +21,8 @@ module.exports = function(grunt) {
                 }
             },
             build: {
-                src: ['src/FLUX.js'],
-                dest: 'dist/flux.js'
+                src: ['src/index.js'],
+                dest: 'dist/flux-tween.js'
             }
         },
         rquire: {
@@ -37,8 +37,8 @@ module.exports = function(grunt) {
                     universal: 'FLUX',
                     micro_paths: true,
                     safe_undefined: true,
-                    main: 'FLUX.js',
-                    dest: 'dist/flux.js'
+                    main: 'index.js',
+                    dest: 'dist/flux-tween.js'
                 }
             }
         }
