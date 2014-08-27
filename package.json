@@ -2,11 +2,12 @@
   "name": "flux-tween.js",
   "title": "flux-tween.js",
   "description": "javascript tweens and springs",
-  "version": "0.0.1",
+  "version": "0.0.2",
+  "main": "dist/flux-tween.js",
   "homepage": "https://github.com/JosephClay/flux-tween.js",
   "licenses": "MIT",
   "author": {
-    "name": "Joe Clay",
+    "name": "Joseph Clay",
     "email": "testingriven@gmail.com"
   },
   "repository": {
