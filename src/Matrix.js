@@ -20,7 +20,7 @@ var WebMatrix = window.WebKitCSSMatrix ? window.WebKitCSSMatrix : require('./pol
 			y: Math.sqrt(m.m21 * m.m21 + m.m22 * m.m22 + m.m23 * m.m23),
 			z: Math.sqrt(m.m31 * m.m31 + m.m32 * m.m32 + m.m33 * m.m33)
 
-		};7
+		};
 
 		result.rotation = {
 
@@ -35,14 +35,14 @@ var WebMatrix = window.WebKitCSSMatrix ? window.WebKitCSSMatrix : require('./pol
 	};
 
 var Matrix = function Matrix(matrix) {
-	
+
 	if (matrix instanceof WebMatrix) {
-		
+
 		// Webmatrix
 		this.from(_decomposeWebMatrix(matrix));
 
 	}
-	
+
 };
 
 Matrix.prototype = {
