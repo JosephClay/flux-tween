@@ -19,7 +19,7 @@ var loop = {
 
 	remove: function(fn) {
 
-		var idx = _.indexOf(_animations, fn);
+		var idx = _animations.indexOf(fn);
 		if (idx !== -1) {
 
 			_animations.splice(idx, 1);
@@ -31,7 +31,7 @@ var loop = {
 	update: function(time) {
 
 		time = loop.now = time || (window.performance !== undefined &&
-			window.performance.now !== undefined) ? 
+			window.performance.now !== undefined) ?
 			window.performance.now() :
 			Date.now ?
 			Date.now() :
