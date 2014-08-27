@@ -1,6 +1,6 @@
 // from the amazing sole
 // https://github.com/sole/tween.js/
-module.exports = {
+var Easing = module.exports = {
 
 	Linear: {
 

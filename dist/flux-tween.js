@@ -60,14 +60,14 @@
         },
         {
             "1": function(require, module, exports) {
-                require('8');
+                require('16');
 
                 var previousFlux = window.FLUX,
 
                 	FLUX = {
 
-                		Tween: require('11'),
-                		Spring: require('10'),
+                		Tween: require('10'),
+                		Spring: require('9'),
 
                 		Easing: require('2'),
 
@@ -84,19 +84,19 @@
                 // TODO: Dont assign to window after going to rq build
                 return (module.exports = window.FLUX = FLUX);
             },
-            "8": function(require, module, exports) {
+            "16": function(require, module, exports) {
                 if (!Date.now) {
                     Date.now = function now() {
                         return new Date().getTime();
                     };
                 }
             },
-            "11": function(require, module, exports) {
+            "10": function(require, module, exports) {
                 var _ = require('5'),
 
                 	_loop = require('4'),
 
-                	Animator = require('9'),
+                	Animator = require('8'),
 
                 	Easing = require('2'),
 
@@ -307,14 +307,14 @@
 
                 module.exports = loop;
             },
-            "9": function(require, module, exports) {
+            "8": function(require, module, exports) {
                 var _ = require('5'),
 
                 	_loop = require('4'),
 
-                	TransformObj = require('14'),
-                	TransformElem = require('13'),
-                	TransformCollection = require('12');
+                	TransformObj = require('15'),
+                	TransformElem = require('14'),
+                	TransformCollection = require('13');
 
                 var Animation = function(obj) {
 
@@ -455,10 +455,10 @@
 
                 module.exports = Animation;
             },
-            "14": function(require, module, exports) {
+            "15": function(require, module, exports) {
                 var _ = require('5'),
 
-                	_matrixAnimatables = require('15'),
+                	_matrixAnimatables = require('11'),
 
                 	Matrix = require('3'),
 
@@ -790,7 +790,7 @@
 
                 module.exports = Obj;
             },
-            "15": function(require, module, exports) {
+            "11": function(require, module, exports) {
                 module.exports = [
                 	'x',
                 	'y',
@@ -1021,16 +1021,16 @@
 
                 module.exports = Matrix;
             },
-            "13": function(require, module, exports) {
+            "14": function(require, module, exports) {
                 var _ = require('5'),
 
-                	_props = require('16'),
+                	_props = require('12'),
 
                 	WebMatrix = window.WebKitCSSMatrix ? window.WebKitCSSMatrix : require('xcssmatrix'),
 
                 	Matrix = require('3'),
 
-                	Obj = require('14');
+                	Obj = require('15');
 
                 var _getComputedMatrix = function(computedStyles) {
 
@@ -1165,7 +1165,7 @@
 
                 module.exports = Elem;
             },
-            "16": function(require, module, exports) {
+            "12": function(require, module, exports) {
                 var _div = document.createElement('div'),
 
                 	_selectProp = function(arr) {
@@ -1191,11 +1191,11 @@
 
                 _div = null;
             },
-            "12": function(require, module, exports) {
+            "13": function(require, module, exports) {
                 var _ = require('5'),
 
-                	Elem = require('13'),
-                	Obj = require('14');
+                	Elem = require('14'),
+                	Obj = require('15');
 
                 var Elems = function(arr) {
 
@@ -1314,7 +1314,7 @@
             "2": function(require, module, exports) {
                 // from the amazing sole
                 // https://github.com/sole/tween.js/
-                module.exports = {
+                var Easing = module.exports = {
 
                 	Linear: {
 
@@ -1706,12 +1706,12 @@
 
                 module.exports = Tween;
             },
-            "10": function(require, module, exports) {
+            "9": function(require, module, exports) {
                 var _ = require('5'),
 
                 	_loop = require('4'),
 
-                	Animator = require('9'),
+                	Animator = require('8'),
 
                 	SpringAnimation = require('6');
 
