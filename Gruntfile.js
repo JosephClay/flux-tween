@@ -2,6 +2,8 @@ module.exports = function(grunt) {
 
 	grunt.loadNpmTasks('grunt-browserify');
 	grunt.loadNpmTasks('grunt-rquirejs');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
 	grunt.initConfig({
@@ -14,6 +16,7 @@ module.exports = function(grunt) {
                 }
             }
         },
+
 		browserify: {
             options: {
                 bundleOptions: {
@@ -25,6 +28,7 @@ module.exports = function(grunt) {
                 dest: 'dist/flux-tween.js'
             }
         },
+
         rquire: {
             build: {
                 options: {
@@ -41,9 +45,31 @@ module.exports = function(grunt) {
                     dest: 'dist/flux-tween.js'
                 }
             }
+        },
+
+        uglify: {
+            build: {
+                files: {
+                    'dist/flux-tween.min.js': ['dist/flux-tween.js']
+                }
+            }
+        },
+
+        compress: {
+            build: {
+                options: {
+                    mode: 'gzip'
+                },
+                files: [
+                    {
+                        src: ['dist/flux-tween.min.js'],
+                        dest: 'dist/flux-tween.min.gz.js'
+                    }
+                ]
+            }
         }
 	});
 
-	grunt.registerTask('default', ['browserify', 'watch']);
-    grunt.registerTask('rq', ['rquire']);
+    grunt.registerTask('default', ['rquire', 'uglify', 'compress']);
+	grunt.registerTask('dev', ['browserify', 'watch']);
 };
