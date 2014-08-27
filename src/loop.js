@@ -30,12 +30,7 @@ var loop = {
 
 	update: function(time) {
 
-		time = loop.now = time || (window.performance !== undefined &&
-			window.performance.now !== undefined) ?
-			window.performance.now() :
-			Date.now ?
-			Date.now() :
-			new Date().getTime();
+		time = loop.now = time || Date.now();
 
 		if (_waiting.length === 0 && _animations.length === 0) { return; }
 
