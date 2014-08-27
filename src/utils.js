@@ -1,4 +1,4 @@
-var _toString = Object.prototype.toString;
+var toString = Object.prototype.toString;
 
 module.exports = {
 	noop: function() {},
@@ -12,11 +12,11 @@ module.exports = {
 	},
 
 	isString: function(obj) {
-		return _toString.call(obj) === '[object String]';
+		return toString.call(obj) === '[object String]';
 	},
 
 	isNumber: function(obj) {
-		return _toString.call(obj) === '[object Number]';
+		return toString.call(obj) === '[object Number]';
 	},
 
 	map: function(arr, iterator) {
