@@ -1,9 +1,9 @@
 var _ = require('../utils'),
 
 	_props = require('../styles/props'),
-	
-	WebMatrix = window.WebKitCSSMatrix ? window.WebKitCSSMatrix : require('../polyfills/XCSSMatrix'),
-	
+
+	WebMatrix = window.WebKitCSSMatrix ? window.WebKitCSSMatrix : require('xcssmatrix'),
+
 	Matrix = require('../Matrix'),
 
 	Obj = require('./Obj');
@@ -29,7 +29,7 @@ var Elem = function(elem) {
 
 Elem.prototype = {
 	element: function() {
-		
+
 		return this._elem;
 
 	},
@@ -125,7 +125,7 @@ Elem.prototype = {
 		// for the matrix based off of the element's current
 		// transformation
 		if (this._obj.hasMatrix()) {
-			
+
 			var matrix = new Matrix(
 				// reuse the computed matrix if we can
 				_getComputedMatrix(computedStyles || _getComputedStyle(this._elem))

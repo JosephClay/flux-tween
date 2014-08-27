@@ -1,4 +1,4 @@
-var WebMatrix = window.WebKitCSSMatrix ? window.WebKitCSSMatrix : require('./polyfills/XCSSMatrix'),
+var WebMatrix = window.WebKitCSSMatrix ? window.WebKitCSSMatrix : require('xcssmatrix'),
 
 	_emptyMatrix = new WebMatrix(),
 

@@ -22,5 +22,8 @@
     "grunt-contrib-uglify": "^0.5.1",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-rquirejs": "^0.1.2"
+  },
+  "dependencies": {
+    "xcssmatrix": "^0.2.2"
   }
 }
