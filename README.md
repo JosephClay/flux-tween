@@ -1,2 +1,2 @@
-FLUX Tweens and Springs
+Javascript tween and spring animations
 =========
