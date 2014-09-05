@@ -38,7 +38,7 @@ module.exports = function(grunt) {
                         'Math'    : 'Math',
                         'Object'  : 'Object'
                     },
-                    universal: 'FLUX',
+                    universal: 'flux',
                     micro_paths: true,
                     safe_undefined: true,
                     main: 'index.js',
