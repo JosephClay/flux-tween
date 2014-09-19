@@ -1,11 +1,11 @@
 (function() {
-	
+
 	var tick = function(time) {
 		stats.begin();
-		
+
 		FLUX.update(time);
 		requestAnimationFrame(tick);
-		
+
 		stats.end();
 	};
 
@@ -15,7 +15,7 @@
 		tension: 80,
 		friction: 15,
 		velocity: 1000
-	};[0]
+	};
 
 	FLUX.Spring($('[data-x]')[0])
 		.set(_SPRING)
@@ -26,7 +26,7 @@
 			elem.applyMatrix();
 		})
 		.start();
-	[0]	
+
 	FLUX.Spring($('[data-y]')[0])
 		.set(_SPRING)
 		.to({ y: -50 })
@@ -35,7 +35,7 @@
 		.onUpdate(function(elem) {
 			elem.applyMatrix();
 		})
-		.start();[0]
+		.start();
 
 	FLUX.Spring($('[data-z]')[0])
 		.set(_SPRING)
@@ -45,7 +45,7 @@
 		.onUpdate(function(elem) {
 			elem.applyMatrix();
 		})
-		.start();[0]
+		.start();
 
 	FLUX.Spring($('[data-scale-y]')[0])
 		.set(_SPRING)
@@ -55,7 +55,7 @@
 		.onUpdate(function(elem) {
 			elem.applyMatrix();
 		})
-		.start();[0]
+		.start();
 
 	FLUX.Spring($('[data-scale-x]')[0])
 		.set(_SPRING)
@@ -65,7 +65,7 @@
 		.onUpdate(function(elem) {
 			elem.applyMatrix();
 		})
-		.start();[0]
+		.start();
 
 	FLUX.Spring($('[data-scale-z]')[0])
 		.set(_SPRING)
@@ -75,7 +75,7 @@
 		.onUpdate(function(elem) {
 			elem.applyMatrix();
 		})
-		.start();[0]
+		.start();
 
 	FLUX.Spring($('[data-scale]')[0])
 		.set(_SPRING)
@@ -85,7 +85,7 @@
 		.onUpdate(function(elem) {
 			elem.applyMatrix();
 		})
-		.start();[0]
+		.start();
 
 	FLUX.Spring($('[data-rotate-x]')[0])
 		.set(_SPRING)
@@ -95,7 +95,7 @@
 		.onUpdate(function(elem) {
 			elem.applyMatrix();
 		})
-		.start();[0]
+		.start();
 
 	FLUX.Spring($('[data-rotate-y]')[0])
 		.set(_SPRING)
@@ -105,7 +105,7 @@
 		.onUpdate(function(elem) {
 			elem.applyMatrix();
 		})
-		.start();[0]
+		.start();
 
 	FLUX.Spring($('[data-rotate-z]')[0])
 		.set(_SPRING)
