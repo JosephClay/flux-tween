@@ -1,6 +1,6 @@
 {
-  "name": "flux-tween.js",
-  "title": "flux-tween.js",
+  "name": "flux-tween",
+  "title": "flux-tween",
   "description": "javascript tweens and springs",
   "version": "0.0.2",
   "main": "./dist/flux-tween.js",
