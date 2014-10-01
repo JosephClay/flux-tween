@@ -19,5 +19,4 @@ var previousFlux = window.FLUX,
 		}
 	};
 
-// TODO: Dont assign to window after going to rq build
-return (module.exports = window.FLUX = FLUX);
+return (module.exports = FLUX);
