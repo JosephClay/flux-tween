@@ -2,7 +2,7 @@ var _ = require('../utils'),
 
 	_props = require('../styles/props'),
 
-	WebMatrix = window.WebKitCSSMatrix ? window.WebKitCSSMatrix : require('xcssmatrix'),
+	WebMatrix = require('xcssmatrix'),
 
 	Matrix = require('../Matrix'),
 
