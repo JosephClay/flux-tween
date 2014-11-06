@@ -1,28 +1,28 @@
-var _ = require('./utils'),
-	_waiting = [],
-	_animations = [];
+var _          = require('./utils'),
+	waiting    = [],
+	animations = [];
 
-var loop = {
+var loop = module.exports = {
 	now: 0,
 
 	await: function(fn) {
 
-		_waiting.push(fn);
+		waiting.push(fn);
 
 	},
 
 	add: function(fn) {
 
-		_animations.push(fn);
+		animations.push(fn);
 
 	},
 
 	remove: function(fn) {
 
-		var idx = _animations.indexOf(fn);
+		var idx = animations.indexOf(fn);
 		if (idx !== -1) {
 
-			_animations.splice(idx, 1);
+			animations.splice(idx, 1);
 
 		}
 
@@ -32,32 +32,30 @@ var loop = {
 
 		time = loop.now = time || Date.now();
 
-		if (_waiting.length === 0 && _animations.length === 0) { return; }
+		if (waiting.length === 0 && animations.length === 0) { return; }
 
 		var idx = 0;
-		while (idx < _waiting.length) {
+		while (idx < waiting.length) {
 
-			if (_waiting[idx](time)) {
+			if (waiting[idx](time)) {
 
 				idx++;
 
 			} else {
 
-				_waiting.splice(idx, 1);
+				waiting.splice(idx, 1);
 
 			}
 
 		}
 
 		idx = 0;
-		while (idx < _animations.length) {
+		while (idx < animations.length) {
 
-			_animations[idx].step(time);
+			animations[idx].step(time);
 			idx++;
 
 		}
 
 	}
 };
-
-module.exports = loop;

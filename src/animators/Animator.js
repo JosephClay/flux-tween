@@ -1,70 +1,81 @@
-var _ = require('../utils'),
+var _      = require('../utils'),
 
-	_loop = require('../loop'),
+	loop   = require('../loop'),
 
-	TransformObj = require('../transformers/Obj'),
-	TransformElem = require('../transformers/Elem'),
-	TransformCollection = require('../transformers/Collection');
+	Elem   = require('../Elem'),
+
+	Matrix = require('../transformers/Matrix'),
+	Obj    = require('../transformers/Obj');
 
 var Animation = function(obj) {
 
-	this._transformer = _.isArrayLike(obj) ?
-		new TransformCollection(obj) :
-		_.isElement(obj) ?
-			new TransformElem(obj) :
-			new TransformObj(obj);
+	var hasElem = _.isElement(obj);
+	this.obj         = hasElem ? Obj.create() : Obj.create(obj);
+	this._elem        = hasElem ? Elem.create(obj) : null;
+	this.elem         = hasElem ? obj : null;
+	this.matrix       = Matrix.create();
+	this.playing      = false;
+	this._startTime   = 0;
+	this._delayTime   = 0;
+	this._events      = {};
 
-	this._startTime = 0;
-	this._delayTime = 0;
-	this._isPlaying = false;
+	var self = this;
+	this.transform = {
+		from: function(from) {
 
-	this._onStartCallback    = _.noop;
-	this._onUpdateCallback   = _.noop;
-	this._onReverseCallback  = _.noop;
-	this._onCompleteCallback = _.noop;
-	this._onStopCallback     = _.noop;
+			self.matrix.setFrom(from);
 
+			return self;
+
+		},
+		to: function(to) {
+
+			self.matrix.setTo(to);
+
+			return self;
+
+		}
+	};
 };
 
 Animation.prototype = {
 
-	isPlaying: function() {
+	on: function(name, fn) {
 
-		return this._isPlaying;
-
-	},
-
-	onStart: function(callback) {
-
-		this._onStartCallback = callback;
+		var arr = this._events[name] || (this._events[name] = []);
+		arr.push(fn);
 		return this;
 
 	},
 
-	onUpdate: function(callback) {
+	off: function(name, fn) {
 
-		this._onUpdateCallback = callback;
+		var arr = this._events[name];
+		if (!arr || !arr.length) { return this; }
+
+		var idx = arr.indexOf(fn);
+		if (idx !== -1) {
+
+			animations.splice(idx, 1);
+
+		}
+
 		return this;
 
 	},
 
-	onComplete: function(callback) {
+	trigger: function(name, a, b) {
 
-		this._onCompleteCallback = callback;
-		return this;
+		var arr = this._events[name];
+		if (!arr || !arr.length) { return this; }
 
-	},
+		var idx = 0, length = arr.length;
+		for (; idx < length; idx++) {
 
-	onReverse: function(callback) {
+			arr[idx](a, b);
 
-		this._onReverseCallback = callback;
-		return this;
+		}
 
-	},
-
-	onStop: function(callback) {
-
-		this._onStopCallback = callback;
 		return this;
 
 	},
@@ -84,25 +95,33 @@ Animation.prototype = {
 	},
 
 	yoyo: function(yoyo) {
+
 		if (!arguments.length) { yoyo = true; }
-		this._transformer.yoyo(yoyo);
+		this.obj.yoyo = this.matrix.yoyo = !!yoyo;
 		return this;
 
 	},
 
-	to: function(goTo) {
+	to: function(to) {
 
-		this._transformer.to(goTo);
+		this.obj.setTo(to);
+		return this;
+
+	},
+
+	from: function(from) {
+
+		this.obj.setFrom(from);
 		return this;
 
 	},
 
 	start: function(time) {
 
-		this._startTime = time || _loop.now;
+		this._startTime = time || loop.now;
 
 		var self = this;
-		_loop.await(function(time) {
+		loop.await(function(time) {
 
 			var shouldContinueToWait;
 
@@ -112,9 +131,11 @@ Animation.prototype = {
 
 			}
 
-			self._onStartCallback();
+			self.trigger('start');
 
-			self._isPlaying = true;
+			self.playing = true;
+
+			self._resolveToFrom();
 
 			self._start(time);
 
@@ -122,25 +143,63 @@ Animation.prototype = {
 
 		});
 
+		return this;
+
+	},
+
+	_resolveToFrom: function() {
+
+		if (!this._elem) { return; }
+
+		if (!this.obj.base) {
+
+			this.obj.setFrom(
+				this._elem.calcBase(this.obj.to)
+			);
+
+		}
+
+		if (this.matrix.to) {
+
+			this.matrix.setMatrix(this._elem.calcMatrix());
+
+		}
+
+	},
+
+	pause: function(time) {
+
+		time = time || loop.now;
+		this._animation.pause(time);
+		return this;
+
+	},
+
+	resume: function(time) {
+
+		time = time || loop.now;
+		this._animation.resume(time);
+		return this;
+
 	},
 
 	stop: function() {
 
-		if (!this._isPlaying) { return this; }
+		if (!this.playing) { return this; }
 
-		this._isPlaying = false;
+		this.playing = false;
 
-		_loop.remove(this._animation.step);
+		loop.remove(this._animation);
 
-		this._transformer.stop();
 		this._animation.stop();
 
-		this._onStopCallback();
+		this.trigger('stop');
 
+		return this;
 	}
 
 	// Implemented by the inheritor
-	// _start: function() {},
+	// _start: function() {}
 };
 
 module.exports = Animation;

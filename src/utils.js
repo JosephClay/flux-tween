@@ -1,4 +1,4 @@
-var toString = Object.prototype.toString;
+var toString = {}.toString;
 
 module.exports = {
 	noop: function() {},
@@ -19,16 +19,13 @@ module.exports = {
 		return toString.call(obj) === '[object Number]';
 	},
 
-	map: function(arr, iterator) {
-		var result = [],
-			idx = 0, length = arr.length;
-		for (; idx < length; idx++) {
-			result[idx] = iterator(arr[idx], idx);
-		}
-		return result;
+	hasSize: function(obj) {
+		if (!obj) { return false; }
+		for (var key in obj) { return true; }
+		return false;
 	},
 
-	fastmap: function(arr, iterator, result) {
+	mapOver: function(arr, iterator, result) {
 		var idx = 0, length = arr.length;
 		for (; idx < length; idx++) {
 			result[idx] = iterator(arr[idx], idx);
@@ -36,29 +33,22 @@ module.exports = {
 		return result;
 	},
 
-	hasSize: function(obj) {
-		if (!obj) { return false; }
-		for (var key in obj) { return true; }
-		return false;
-	},
+	extend: function(base) {
+		if (!base) { return base; }
 
-	extend: function() {
 		var args = arguments,
-			obj = args[0],
-			idx = 1, length = args.length;
-
-		if (!obj) { return obj; }
+			idx = 1, length = args.length,
+			source, prop;
 
 		for (; idx < length; idx++) {
-			var source = args[idx];
+			source = args[idx];
 			if (source) {
-				var prop;
 				for (prop in source) {
-					obj[prop] = source[prop];
+					base[prop] = source[prop];
 				}
 			}
 		}
 
-		return obj;
+		return base;
 	}
 };

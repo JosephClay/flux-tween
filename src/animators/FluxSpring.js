@@ -1,29 +1,24 @@
 var _ = require('../utils'),
 
-	_loop = require('../loop'),
+	loop = require('../loop'),
 
 	Animator = require('./Animator'),
-	
-	SpringAnimation = require('../animations/Spring');
 
-var FluxSpring = function Spring(obj) {
+	Spring = require('./animations/Spring');
 
-	if (!(this instanceof FluxSpring)) { return new FluxSpring(obj); }
-
+var FluxSpring = module.exports =function(obj) {
 	Animator.call(this, obj);
 
-	this._animation = new SpringAnimation();
+	this._animation = Spring.create();
+};
+
+FluxSpring.create = function(obj) {
+
+	return new FluxSpring(obj);
 
 };
 
 _.extend(FluxSpring.prototype, Animator.prototype, {
-
-	from: function(obj) {
-
-		this._transformer.from(obj);
-		return this;
-
-	},
 
 	set: function(tension, friction, velocity) {
 
@@ -36,27 +31,31 @@ _.extend(FluxSpring.prototype, Animator.prototype, {
 		}
 
 		this._animation.set(tension, friction, velocity);
+
 		return this;
 
 	},
-	
+
 	tension: function(tension) {
 
-		this._animation.tension(tension);
+		this._animation.tension = +tension;
+
 		return this;
 
 	},
 
 	friction: function(friction) {
 
-		this._animation.friction(friction);
+		this._animation.friction = +friction;
+
 		return this;
 
 	},
 
 	velocity: function(velocity) {
 
-		this._animation.velocity(velocity);
+		this._animation.velocity = +velocity;
+
 		return this;
 
 	},
@@ -69,34 +68,32 @@ _.extend(FluxSpring.prototype, Animator.prototype, {
 
 				onUpdate: function(perc) {
 
-					self._transformer.update(perc);
+					self.obj.update(perc);
+					self.matrix.update(perc);
 
-					self._onUpdateCallback(self._transformer.value());
+					self.trigger('update', self.obj.base, self);
 
 				},
 
 				onReverse: function() {
 
-					self._transformer.reverse();
+					self.obj.reverse();
+					self.matrix.reverse();
 
 				},
 
 				onComplete: function() {
 
-					self._isPlaying = false;
-
-					_loop.remove(self._animation);
-
-					self._onCompleteCallback();
+					self.stop().trigger('complete');
 
 				}
 
 			});
 
-		self._transformer.start();
-		_loop.add(self._animation);
+		self.obj.start();
+		self.matrix.start();
+
+		loop.add(self._animation);
 
 	}
 });
-
-module.exports = FluxSpring;

@@ -1,22 +1,46 @@
-require('./polyfills/date-now');
+var Tween     = require('./animators/FluxTween'),
+    Spring    = require('./animators/FluxSpring'),
+    transform = require('./transform-prop');
 
-var previousFlux = window.FLUX,
+var flux = {
+	transform: transform,
 
-	FLUX = {
+	tween: function(obj) {
 
-		Tween: require('./animators/FluxTween'),
-		Spring: require('./animators/FluxSpring'),
+        return Tween.create(obj);
 
-		Easing: require('./Easing'),
+    },
+	spring: function(obj) {
 
-		update: require('./loop').update,
+        return Spring.create(obj);
 
-		noConflict: function() {
+    },
 
-			window.FLUX = previousFlux;
-			return FLUX;
+	easing: require('./easing'),
 
-		}
-	};
+	update: require('./loop').update,
 
-return (module.exports = FLUX);
+    applyMatrix: function(obj, tween) {
+        var elem = tween.elem,
+            matrix = tween.matrix;
+
+        if (!elem || !matrix) { return; }
+
+        elem.style[transform] = matrix.toString();
+    },
+
+    plugin: function(name, fn) {
+
+        Tween.prototype[name] = Spring.prototype[name] = function() {
+
+            fn.apply(this, arguments);
+            return this;
+
+        };
+
+        return flux;
+
+    }
+};
+
+module.exports = flux;
