@@ -300,6 +300,15 @@ flux.spring(document.getElementById('spring-me'))
     .on('update', flux.applyMatrix)
     .start();
 ```
+which is the same as:
+```
+flux.spring(document.getElementById('spring-me'))
+    .transform.to({ x: 50 })
+    .on('update', function(obj, anim) {
+        anim.elem.style[flux.transform] = anim.matrix.toString();
+    })
+    .start();
+```
 
 `flux.transform` contains the transformation property to use for styles in the current browser.
 
