@@ -45,7 +45,7 @@ var flux = {
 };
 
 module.exports = flux;
-},{"./animators/FluxSpring":14,"./animators/FluxTween":15,"./easing":18,"./loop":19,"./transform-prop":20}],2:[function(require,module,exports){
+},{"./animators/FluxSpring":10,"./animators/FluxTween":11,"./easing":14,"./loop":17,"./transform-prop":20}],2:[function(require,module,exports){
 var XCSSMatrix = require('./lib/XCSSMatrix.js');
 module.exports = XCSSMatrix;
 
@@ -1202,248 +1202,11 @@ function multiplyByMatrix(vector, matrix) {
 }
 
 },{}],9:[function(require,module,exports){
-var utils = require('./utils');
-
-var Elem = module.exports = function(elem) {
-
-    this.elem = elem;
-
-    // this._computedStyles
-
-};
-
-Elem.create = function(elem) {
-
-    return new Elem(elem);
-
-};
-
-Elem.prototype = {
-
-    calcBase: function(to) {
-
-        var from = {},
-            computedStyles = this._computedStyles = utils.getComputedStyle(this.elem);
-
-        for (var property in to) {
-
-            from[property] = computedStyles[property];
-
-        }
-
-        return from;
-
-    },
-
-    calcMatrix: function() {
-
-        return utils.getComputedMatrix(this._computedStyles || utils.getComputedStyle(this.elem));
-
-    }
-};
-},{"./utils":10}],10:[function(require,module,exports){
-var WebMatrix = require('xcssmatrix'),
-
-    transform = require('../transform-prop');
-
-module.exports = {
-
-    getComputedMatrix: function(computedStyles) {
-
-        return new WebMatrix(computedStyles[transform]);
-
-    },
-
-    getComputedStyle: function(elem) {
-
-        return document.defaultView.getComputedStyle(elem);
-
-    }
-
-};
-},{"../transform-prop":20,"xcssmatrix":2}],11:[function(require,module,exports){
-module.exports = function(m) {
-
-    var result = {};
-
-    result.translation = {
-
-        x: m.m41,
-        y: m.m42,
-        z: m.m43
-
-    };
-
-    result.scale = {
-
-        x: Math.sqrt(m.m11 * m.m11 + m.m12 * m.m12 + m.m13 * m.m13),
-        y: Math.sqrt(m.m21 * m.m21 + m.m22 * m.m22 + m.m23 * m.m23),
-        z: Math.sqrt(m.m31 * m.m31 + m.m32 * m.m32 + m.m33 * m.m33)
-
-    };
-
-    result.rotation = {
-
-        x: -Math.atan2(m.m32 / result.scale.z, m.m33 / result.scale.z),
-        y: Math.asin(m.m31 / result.scale.z),
-        z: -Math.atan2(m.m21 / result.scale.y, m.m11 / result.scale.x)
-
-    };
-
-    return result;
-
-};
-},{}],12:[function(require,module,exports){
-var PI_180 = Math.PI * 180,
-
-	WebMatrix = require('xcssmatrix'),
-
-	emptyMatrix = new WebMatrix(),
-
-	decomposeWebMatrix = require('./decompose');
-
-var Matrix = module.exports = function Matrix(matrix) {
-
-	if (matrix instanceof WebMatrix) {
-
-		// Webmatrix
-		this.from(decomposeWebMatrix(matrix));
-
-	}
-
-};
-
-Matrix.blank = function() {
-
-	return {
-		x: 0,
-		y: 0,
-		z: 0,
-		scaleX: 1,
-		scaleY: 1,
-		scaleZ: 1,
-		rotationX: 0,
-		rotationY: 0,
-		rotationZ: 0
-	};
-
-};
-
-Matrix.prototype = {
-
-	// Bit of bloat, but faster
-	// setting of private vars than
-	// defineProperty... this leaves us
-	// with XCSSMATRIX being the biggest
-	// slowdown when it comes to property
-	// access.
-
-	setX: function(value) {
-		return (this._x = (value || 0));
-	},
-
-	setY: function(value) {
-		return (this._y = (value || 0));
-	},
-
-	setZ: function(value) {
-		return (this._z = (value || 0));
-	},
-
-	setScaleX: function(value) {
-		return (this._scaleX = (value || 0));
-	},
-
-	setScaleY: function(value) {
-		return (this._scaleY = (value || 0));
-	},
-
-	setScaleZ: function(value) {
-		return (this._scaleZ = (value || 0));
-	},
-
-	setScale: function(value) {
-		return (this._scaleX = this._scaleY = (value || 0));
-	},
-
-	setRotationX: function(value) {
-		return (this._rotationX = (value || 0));
-	},
-
-	setRotationY: function(value) {
-		return (this._rotationY = (value || 0));
-	},
-
-	setRotationZ: function(value) {
-		return (this._rotationZ = (value || 0));
-	},
-
-	setRotation: function(value) {
-		return (this.rotationZ = (value || 0));
-	},
-
-	transpose: function(obj) {
-
-		if (!obj) { return; }
-
-		for (var property in obj) {
-			this[property] = obj[property];
-		}
-
-	},
-
-	from: function(fromMatrix) {
-
-		var matrix = this;
-		matrix._x         = fromMatrix.translation.x;
-		matrix._y         = fromMatrix.translation.y;
-		matrix._z         = fromMatrix.translation.z;
-		matrix._scaleX    = fromMatrix.scale.x;
-		matrix._scaleY    = fromMatrix.scale.y;
-		matrix._scaleZ    = fromMatrix.scale.z;
-		matrix._rotationX = fromMatrix.rotation.x / PI_180;
-		matrix._rotationY = fromMatrix.rotation.y / PI_180;
-		matrix._rotationZ = fromMatrix.rotation.z / PI_180;
-
-	},
-
-	update: function() {
-
-		var matrix = this,
-			newMatrix = emptyMatrix;
-		newMatrix = newMatrix.translate(matrix._x, matrix._y, matrix._z);
-		newMatrix = newMatrix.rotate(matrix._rotationX, matrix._rotationY, matrix._rotationZ);
-		newMatrix = newMatrix.scale(matrix._scaleX, matrix._scaleY, matrix._scaleZ);
-
-		return newMatrix;
-
-	},
-
-	toObject: function() {
-
-		var matrix = this,
-			m = this._m || (this._m = {});
-		m.x         = matrix._x;
-		m.y         = matrix._y;
-		m.z         = matrix._z;
-		m.scaleX    = matrix._scaleX;
-		m.scaleY    = matrix._scaleY;
-		m.scaleZ    = matrix._scaleZ;
-		m.rotationX = matrix._rotationX;
-		m.rotationY = matrix._rotationY;
-		m.rotationZ = matrix._rotationZ;
-
-		return m;
-
-	}
-
-};
-},{"./decompose":11,"xcssmatrix":2}],13:[function(require,module,exports){
 var _      = require('../utils'),
 
 	loop   = require('../loop'),
 
-	Elem   = require('../Elem'),
+	Elem   = require('../elem'),
 
 	Matrix = require('../transformers/Matrix'),
 	Obj    = require('../transformers/Obj');
@@ -1644,7 +1407,7 @@ Animation.prototype = {
 };
 
 module.exports = Animation;
-},{"../Elem":9,"../loop":19,"../transformers/Matrix":22,"../transformers/Obj":23,"../utils":24}],14:[function(require,module,exports){
+},{"../elem":15,"../loop":17,"../transformers/Matrix":22,"../transformers/Obj":23,"../utils":24}],10:[function(require,module,exports){
 var _ = require('../utils'),
 
 	loop = require('../loop'),
@@ -1744,7 +1507,7 @@ _.extend(FluxSpring.prototype, Animator.prototype, {
 
 	}
 });
-},{"../loop":19,"../utils":24,"./Animator":13,"./animations/Spring":16}],15:[function(require,module,exports){
+},{"../loop":17,"../utils":24,"./Animator":9,"./animations/Spring":12}],11:[function(require,module,exports){
 var _ = require('../utils'),
 
 	loop = require('../loop'),
@@ -1829,7 +1592,7 @@ _.extend(FluxTween.prototype, Animator.prototype, {
 	}
 
 });
-},{"../easing":18,"../loop":19,"../utils":24,"./Animator":13,"./animations/Tween":17}],16:[function(require,module,exports){
+},{"../easing":14,"../loop":17,"../utils":24,"./Animator":9,"./animations/Tween":13}],12:[function(require,module,exports){
 var END_VALUE = 100,
 	TOLERANCE = 0.01,
 	SPEED     = 1 / 60,
@@ -2036,7 +1799,7 @@ Spring.prototype = {
 
 	}
 };
-},{}],17:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var _ = require('../../utils'),
 
 	easing = require('../../easing');
@@ -2164,7 +1927,7 @@ Tween.prototype = {
 
 	stop: _.noop
 };
-},{"../../easing":18,"../../utils":24}],18:[function(require,module,exports){
+},{"../../easing":14,"../../utils":24}],14:[function(require,module,exports){
 // from the amazing sole
 // https://github.com/sole/tween.js/
 
@@ -2521,7 +2284,67 @@ module.exports = {
 
 };
 
-},{}],19:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
+var utils = require('./utils');
+
+var Elem = module.exports = function(elem) {
+
+    this.elem = elem;
+
+    // this._computedStyles
+
+};
+
+Elem.create = function(elem) {
+
+    return new Elem(elem);
+
+};
+
+Elem.prototype = {
+
+    calcBase: function(to) {
+
+        var from = {},
+            computedStyles = this._computedStyles = utils.getComputedStyle(this.elem);
+
+        for (var property in to) {
+
+            from[property] = computedStyles[property];
+
+        }
+
+        return from;
+
+    },
+
+    calcMatrix: function() {
+
+        return utils.getComputedMatrix(this._computedStyles || utils.getComputedStyle(this.elem));
+
+    }
+};
+},{"./utils":16}],16:[function(require,module,exports){
+var WebMatrix = require('xcssmatrix'),
+
+    transform = require('../transform-prop');
+
+module.exports = {
+
+    getComputedMatrix: function(computedStyles) {
+
+        return new WebMatrix(computedStyles[transform]);
+
+    },
+
+    getComputedStyle: function(elem) {
+
+        return document.defaultView.getComputedStyle(elem);
+
+    }
+
+};
+},{"../transform-prop":20,"xcssmatrix":2}],17:[function(require,module,exports){
 var _          = require('./utils'),
 	waiting    = [],
 	animations = [];
@@ -2583,7 +2406,184 @@ var loop = module.exports = {
 
 	}
 };
-},{"./utils":24}],20:[function(require,module,exports){
+},{"./utils":24}],18:[function(require,module,exports){
+module.exports = function(m) {
+
+    var result = {};
+
+    result.translation = {
+
+        x: m.m41,
+        y: m.m42,
+        z: m.m43
+
+    };
+
+    result.scale = {
+
+        x: Math.sqrt(m.m11 * m.m11 + m.m12 * m.m12 + m.m13 * m.m13),
+        y: Math.sqrt(m.m21 * m.m21 + m.m22 * m.m22 + m.m23 * m.m23),
+        z: Math.sqrt(m.m31 * m.m31 + m.m32 * m.m32 + m.m33 * m.m33)
+
+    };
+
+    result.rotation = {
+
+        x: -Math.atan2(m.m32 / result.scale.z, m.m33 / result.scale.z),
+        y: Math.asin(m.m31 / result.scale.z),
+        z: -Math.atan2(m.m21 / result.scale.y, m.m11 / result.scale.x)
+
+    };
+
+    return result;
+
+};
+},{}],19:[function(require,module,exports){
+var PI_180 = Math.PI * 180,
+
+	WebMatrix = require('xcssmatrix'),
+
+	emptyMatrix = new WebMatrix(),
+
+	decomposeWebMatrix = require('./decompose');
+
+var Matrix = module.exports = function Matrix(matrix) {
+
+	if (matrix instanceof WebMatrix) {
+
+		// Webmatrix
+		this.from(decomposeWebMatrix(matrix));
+
+	}
+
+};
+
+Matrix.blank = function() {
+
+	return {
+		x: 0,
+		y: 0,
+		z: 0,
+		scaleX: 1,
+		scaleY: 1,
+		scaleZ: 1,
+		rotationX: 0,
+		rotationY: 0,
+		rotationZ: 0
+	};
+
+};
+
+Matrix.prototype = {
+
+	// Bit of bloat, but faster
+	// setting of private vars than
+	// defineProperty... this leaves us
+	// with XCSSMATRIX being the biggest
+	// slowdown when it comes to property
+	// access.
+
+	setX: function(value) {
+		return (this._x = (value || 0));
+	},
+
+	setY: function(value) {
+		return (this._y = (value || 0));
+	},
+
+	setZ: function(value) {
+		return (this._z = (value || 0));
+	},
+
+	setScaleX: function(value) {
+		return (this._scaleX = (value || 0));
+	},
+
+	setScaleY: function(value) {
+		return (this._scaleY = (value || 0));
+	},
+
+	setScaleZ: function(value) {
+		return (this._scaleZ = (value || 0));
+	},
+
+	setScale: function(value) {
+		return (this._scaleX = this._scaleY = (value || 0));
+	},
+
+	setRotationX: function(value) {
+		return (this._rotationX = (value || 0));
+	},
+
+	setRotationY: function(value) {
+		return (this._rotationY = (value || 0));
+	},
+
+	setRotationZ: function(value) {
+		return (this._rotationZ = (value || 0));
+	},
+
+	setRotation: function(value) {
+		return (this.rotationZ = (value || 0));
+	},
+
+	transpose: function(obj) {
+
+		if (!obj) { return; }
+
+		for (var property in obj) {
+			this[property] = obj[property];
+		}
+
+	},
+
+	from: function(fromMatrix) {
+
+		var matrix = this;
+		matrix._x         = fromMatrix.translation.x;
+		matrix._y         = fromMatrix.translation.y;
+		matrix._z         = fromMatrix.translation.z;
+		matrix._scaleX    = fromMatrix.scale.x;
+		matrix._scaleY    = fromMatrix.scale.y;
+		matrix._scaleZ    = fromMatrix.scale.z;
+		matrix._rotationX = fromMatrix.rotation.x / PI_180;
+		matrix._rotationY = fromMatrix.rotation.y / PI_180;
+		matrix._rotationZ = fromMatrix.rotation.z / PI_180;
+
+	},
+
+	update: function() {
+
+		var matrix = this,
+			newMatrix = emptyMatrix;
+		newMatrix = newMatrix.translate(matrix._x, matrix._y, matrix._z);
+		newMatrix = newMatrix.rotate(matrix._rotationX, matrix._rotationY, matrix._rotationZ);
+		newMatrix = newMatrix.scale(matrix._scaleX, matrix._scaleY, matrix._scaleZ);
+
+		return newMatrix;
+
+	},
+
+	toObject: function() {
+
+		var matrix = this,
+			m = this._m || (this._m = {});
+		m.x         = matrix._x;
+		m.y         = matrix._y;
+		m.z         = matrix._z;
+		m.scaleX    = matrix._scaleX;
+		m.scaleY    = matrix._scaleY;
+		m.scaleZ    = matrix._scaleZ;
+		m.rotationX = matrix._rotationX;
+		m.rotationY = matrix._rotationY;
+		m.rotationZ = matrix._rotationZ;
+
+		return m;
+
+	}
+
+};
+},{"./decompose":18,"xcssmatrix":2}],20:[function(require,module,exports){
 var div = document.createElement('div'),
 
 	selectProp = function(arr) {
@@ -2655,7 +2655,7 @@ module.exports = function(obj) {
 },{}],22:[function(require,module,exports){
 var _ = require('../../utils'),
 
-    M = require('../../Matrix'),
+    M = require('../../matrix'),
 
     expandShorthand = require('./expand-shorthand'),
 
@@ -2786,7 +2786,7 @@ _.extend(Matrix.prototype, Obj.prototype, {
     }
 
 });
-},{"../../Matrix":12,"../../utils":24,"../Obj":23,"./expand-shorthand":21}],23:[function(require,module,exports){
+},{"../../matrix":19,"../../utils":24,"../Obj":23,"./expand-shorthand":21}],23:[function(require,module,exports){
 var Obj = module.exports = function(obj) {
 
 	this.base = obj;
@@ -2906,34 +2906,12 @@ var toString = {}.toString;
 module.exports = {
 	noop: function() {},
 
-	isArrayLike: function(obj) {
-		return (!!obj && obj.length === +obj.length);
-	},
-
 	isElement: function(obj) {
 		return !!(obj && obj.nodeType === 1);
 	},
 
-	isString: function(obj) {
-		return toString.call(obj) === '[object String]';
-	},
-
 	isNumber: function(obj) {
 		return toString.call(obj) === '[object Number]';
-	},
-
-	hasSize: function(obj) {
-		if (!obj) { return false; }
-		for (var key in obj) { return true; }
-		return false;
-	},
-
-	mapOver: function(arr, iterator, result) {
-		var idx = 0, length = arr.length;
-		for (; idx < length; idx++) {
-			result[idx] = iterator(arr[idx], idx);
-		}
-		return result;
 	},
 
 	extend: function(base) {

@@ -1,6 +1,6 @@
 var _ = require('../../utils'),
 
-    M = require('../../Matrix'),
+    M = require('../../matrix'),
 
     expandShorthand = require('./expand-shorthand'),
 

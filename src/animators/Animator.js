@@ -2,7 +2,7 @@ var _      = require('../utils'),
 
 	loop   = require('../loop'),
 
-	Elem   = require('../Elem'),
+	Elem   = require('../elem'),
 
 	Matrix = require('../transformers/Matrix'),
 	Obj    = require('../transformers/Obj');
