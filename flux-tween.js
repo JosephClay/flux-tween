@@ -1417,9 +1417,11 @@ var _ = require('../utils'),
 	Spring = require('./animations/Spring');
 
 var FluxSpring = module.exports =function(obj) {
+
 	Animator.call(this, obj);
 
 	this._animation = Spring.create();
+
 };
 
 FluxSpring.create = function(obj) {
@@ -1519,6 +1521,7 @@ var _ = require('../utils'),
 	Tween = require('./animations/Tween');
 
 var FluxTween = module.exports = function(obj) {
+
 	Animator.call(this, obj);
 
 	this._animation = Tween.create();
@@ -1532,13 +1535,6 @@ FluxTween.create = function(obj) {
 };
 
 _.extend(FluxTween.prototype, Animator.prototype, {
-
-	from: function(obj) {
-
-		this.obj.from(obj);
-		return this;
-
-	},
 
 	duration: function(duration) {
 

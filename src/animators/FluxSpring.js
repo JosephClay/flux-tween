@@ -7,9 +7,11 @@ var _ = require('../utils'),
 	Spring = require('./animations/Spring');
 
 var FluxSpring = module.exports =function(obj) {
+
 	Animator.call(this, obj);
 
 	this._animation = Spring.create();
+
 };
 
 FluxSpring.create = function(obj) {
