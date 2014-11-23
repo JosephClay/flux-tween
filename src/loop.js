@@ -3,7 +3,7 @@ var _          = require('./utils'),
 	animations = [];
 
 var loop = module.exports = {
-	now: 0,
+	now: Date.now(),
 
 	await: function(fn) {
 
