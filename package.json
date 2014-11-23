@@ -2,7 +2,7 @@
   "name": "flux-tween",
   "title": "flux-tween",
   "description": "javascript tweens and springs",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "main": "./src/index.js",
   "homepage": "https://github.com/JosephClay/flux-tween.js",
   "licenses": "MIT",
