@@ -43,7 +43,7 @@ _.extend(Matrix.prototype, Obj.prototype, {
     setMatrix: function(matrix) {
 
         this._matrix = new M(matrix);
-        this.base = this._matrix.toObject();
+        this.base = _.extend(this._matrix.toObject(), this.base);
         return this;
 
     },
