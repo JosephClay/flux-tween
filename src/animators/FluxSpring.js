@@ -25,7 +25,7 @@ _.extend(FluxSpring.prototype, Animator.prototype, {
 	set: function(tension, friction, velocity) {
 
 		// It's an object
-		if (!_.isNumber(tension)) {
+		if (+tension !== tension) {
 			var temp = tension;
 			velocity = temp.velocity;
 			friction = temp.friction;

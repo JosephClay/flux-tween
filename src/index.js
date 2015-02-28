@@ -1,8 +1,18 @@
-var Tween     = require('./animators/FluxTween'),
+var _ = require('./utils'),
+
+    loop = require('./loop'),
+
+    Animator  = require('./animators/Animator'),
+    Tween     = require('./animators/FluxTween'),
     Spring    = require('./animators/FluxSpring'),
+    
     transform = require('./transform-prop');
 
-var flux = {
+var flux = module.exports = _.extend(function(obj) {
+
+    return Animator.create(obj);
+
+}, {
 	transform: transform,
 
 	tween: function(obj) {
@@ -18,7 +28,8 @@ var flux = {
 
 	easing: require('./easing'),
 
-	update: require('./loop').update,
+    update: loop.update,
+	tick: loop.update,
 
     applyMatrix: function(obj, tween) {
         var elem = tween.elem,
@@ -41,6 +52,4 @@ var flux = {
         return flux;
 
     }
-};
-
-module.exports = flux;
+});

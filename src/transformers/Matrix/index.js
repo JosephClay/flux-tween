@@ -39,6 +39,9 @@ Matrix.create = function(obj) {
 };
 
 _.extend(Matrix.prototype, Obj.prototype, {
+    m: function() {
+        return this._matrix;
+    },
 
     setMatrix: function(matrix) {
 

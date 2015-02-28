@@ -1,10 +1,10 @@
-var toString = {}.toString;
+var toString = ({}).toString;
 
 module.exports = {
 	noop: function() {},
 
 	isElement: function(obj) {
-		return !!(obj && obj.nodeType === 1);
+		return !!(obj && +obj.nodeType === obj.nodeType);
 	},
 
 	isNumber: function(obj) {

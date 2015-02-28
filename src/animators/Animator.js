@@ -1,8 +1,10 @@
 var _      = require('../utils'),
 
 	loop   = require('../loop'),
-
+	
 	Elem   = require('../elem'),
+
+	transform = require('../transform-prop'),
 
 	Matrix = require('../transformers/Matrix'),
 	Obj    = require('../transformers/Obj');
@@ -10,14 +12,14 @@ var _      = require('../utils'),
 var Animation = function(obj) {
 
 	var hasElem = _.isElement(obj);
-	this.obj         = hasElem ? Obj.create() : Obj.create(obj);
-	this._elem        = hasElem ? Elem.create(obj) : null;
-	this.elem         = hasElem ? obj : null;
-	this.matrix       = Matrix.create();
-	this.playing      = false;
-	this._startTime   = 0;
-	this._delayTime   = 0;
-	this._events      = {};
+	this.obj        = hasElem ? Obj.create() : Obj.create(obj);
+	this._elem      = hasElem ? Elem.create(obj) : null;
+	this.elem       = hasElem ? obj : null;
+	this.matrix     = Matrix.create();
+	this.playing    = false;
+	this._startTime = 0;
+	this._delayTime = 0;
+	this._events    = {};
 
 	var self = this;
 	this.transform = {
@@ -38,7 +40,41 @@ var Animation = function(obj) {
 	};
 };
 
+Animation.create = function(obj) {
+	
+	return new Animation(obj);
+
+};
+
 Animation.prototype = {
+	position: function(x, y) {
+		var matrix = this.matrix;
+		var m = matrix.m() || matrix.setMatrix(this._elem.calcMatrix()).m();
+		
+		if (x === undefined) {
+			return {
+				x: m._x,
+				y: m._y
+			};
+		}
+
+		if (x.x !== undefined) {
+			m.setX(x.x);
+			m.setY(x.y);
+		} else if (y === undefined) {
+			m.setX(x);
+			m.setY(x);
+		} else {
+			m.setX(x);
+			m.setY(y);
+		}
+
+		if (!this.elem) { return this; }
+
+        this.elem.style[transform] = matrix.toString();
+
+		return this;
+	},
 
 	on: function(name, fn) {
 
