@@ -1,8 +1,8 @@
 var _      = require('../utils'),
 
 	loop   = require('../loop'),
-	
-	Elem   = require('../elem'),
+
+	Elem   = require('../Elem'),
 
 	transform = require('../transform-prop'),
 
@@ -41,7 +41,7 @@ var Animation = function(obj) {
 };
 
 Animation.create = function(obj) {
-	
+
 	return new Animation(obj);
 
 };
@@ -50,7 +50,7 @@ Animation.prototype = {
 	position: function(x, y) {
 		var matrix = this.matrix;
 		var m = matrix.m() || matrix.setMatrix(this._elem.calcMatrix()).m();
-		
+
 		if (x === undefined) {
 			return {
 				x: m._x,
