@@ -1,4 +1,5 @@
-# JavaScript tweens and springs
+# Deprecated
+This library tries to tackle too much, so I've split spring animations into [`flux-spring`](https://github.com/JosephClay/flux-spring). For tweens, I highly recommend [sole's tween.js](https://github.com/tweenjs/tween.js/).
 
 `npm install flux-tween`
 
